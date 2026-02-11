@@ -6,9 +6,10 @@ import EmailIcon from '../../assets/Email.svg?react';
 import PasswordIcon from '../../assets/Eye.svg?react';
 import { ButtonType, InputType, ValidationState } from '../../interfaces/interfaces.ts';
 import useToast from '../../hooks/useToast';
+import useAuth from '../../hooks/useAuth.ts';
+import { useNavigate } from 'react-router-dom';
 import { ToastType } from '../../interfaces/interfaces';
 import './SignUpPage.css';
-import useAuth from '../../hooks/useAuth.ts';
 
 interface SignUpState {
     email: string;
@@ -73,6 +74,7 @@ const SignUpPage = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const { addToast } = useToast();
     const { register } = useAuth();
+    const navigate = useNavigate();
 
     const validateEmail = (email: string): ValidationState => {
         if (!email) {
@@ -131,6 +133,7 @@ const SignUpPage = () => {
 
             dispatch({ type: ActionType.SUBMIT_SUCCESS });
             addToast('Account created successfully!', ToastType.SUCCESS);
+            navigate('/')
         } catch (error) {
             dispatch({ type: ActionType.SUBMIT_ERROR, payload: 'Sign up failed. Please try again.' });
             addToast('Failed to create account. Please try again.', ToastType.ERROR);

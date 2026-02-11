@@ -1,0 +1,44 @@
+name: Deploy Branch to Subfolder
+
+on:
+  push:
+    branches:
+      - '*'
+      - '!master'
+      - '!main'
+      - '!gh-pages'
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          BASE_URL: /social_media_network/${{ github.ref_name }}/
+
+      - name: Copy index.html to 404.html
+        run: cp dist/index.html dist/404.html
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: dist
+          target-folder: ${{ github.ref_name }}
+          clean: false

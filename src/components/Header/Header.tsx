@@ -5,6 +5,7 @@ import useAuth from '../../hooks/useAuth.ts';
 import useTheme from '../../hooks/useTheme.ts';
 import './header.css';
 import { ThemeTypes } from '../../interfaces/interfaces.ts';
+import { Link } from 'react-router-dom';
 
 interface HeaderProps {
     variant?: 'default' | 'simple';
@@ -19,7 +20,7 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
         }
         if (isLoggedIn && user) {
             return (
-                <div className="header-right-side">
+                <Link to='/profile' className="header-right-side">
                     <img
                         className='header-avatar'
                         src={user.pfplink}
@@ -28,13 +29,13 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
                     <span className="header-username">
                         {user.name} {user.surname}
                     </span>
-                </div>
+                </Link>
             );
         } else {
             return (
                 <div className="header-right-side">
-                    <a href="/signup" className="header-link">Sign Up</a>
-                    <a href="/signin" className="header-link">Sign In</a>
+                    <Link to="/signup" className="header-link">Sign Up</Link>
+                    <Link to="/signin" className="header-link">Sign In</Link>
                 </div>
             );
         }
@@ -42,9 +43,9 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
 
     return (
         <header className={`header header-${variant}`}>
-            <div className="header-logo-container">
+            <Link to='/' className="header-logo-container">
                 {theme === ThemeTypes.DARK ? <Logo /> : <LogoLight />}
-            </div>
+            </Link>
             {renderRightSide()}
             <BurgerMenu />
         </header>

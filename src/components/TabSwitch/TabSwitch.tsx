@@ -30,9 +30,8 @@ const TabSwitch = ({ tabs, defaultTab, onTabChange }: TabSwitchProps) => {
                     className={`tab-switch-button ${activeTab === tab.id ? 'active' : ''}`}
                     onClick={() => handleTabClick(tab.id)}
                     type={ButtonType.BUTTON}
-                >
-                    {tab.label}
-                </Button>
+                    label={tab.label}
+                />
             ))}
         </div>
     );

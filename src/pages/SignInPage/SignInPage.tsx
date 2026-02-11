@@ -6,8 +6,9 @@ import PasswordIcon from '../../assets/Eye.svg?react';
 import Button from '../../components/Button/Button.tsx';
 import { type SyntheticEvent, useReducer } from 'react';
 import useToast from '../../hooks/useToast.ts';
-import './SignInPage.css';
 import useAuth from '../../hooks/useAuth.ts';
+import { useNavigate } from 'react-router-dom';
+import './SignInPage.css';
 
 interface SignInState {
     email: string;
@@ -72,6 +73,7 @@ const SignInPage = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const { addToast } = useToast();
     const { login } = useAuth();
+    const navigate = useNavigate();
 
     const validateEmail = (email: string): ValidationState => {
         if (!email) return ValidationState.IDLE;
@@ -121,6 +123,7 @@ const SignInPage = () => {
 
             dispatch({ type: ActionType.SUBMIT_SUCCESS });
             addToast('Successfully signed in!', ToastType.SUCCESS);
+            navigate('/')
         } catch (error) {
             dispatch({ type: ActionType.SUBMIT_ERROR, payload: 'Sign In failed. Please try again.' });
             addToast('Failed to sign into account. Please try again.', ToastType.ERROR);

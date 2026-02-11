@@ -4,6 +4,7 @@ import useAuth from '../../hooks/useAuth';
 import './BurgerMenu.css';
 import Button from '../Button/Button.tsx';
 import { ButtonType } from '../../interfaces/interfaces.ts';
+import { Link } from 'react-router-dom';
 
 const BurgerMenu = () => {
     const { isLoggedIn, user } = useAuth();
@@ -47,20 +48,20 @@ const BurgerMenu = () => {
                         </div>
                         <ul className="burger-menu-list">
                             <li>
-                                <a href="/profile">Profile info</a>
+                                <Link to="/profile">Profile info</Link>
                             </li>
                             <li>
-                                <a href="/statistics">Statistics</a>
+                                <Link to="/statistics">Statistics</Link>
                             </li>
                         </ul>
                     </>
                 ) : (
                     <ul className="burger-menu-list">
                         <li>
-                            <a href="/signup">Sign up</a>
+                            <Link to="/signup">Sign up</Link>
                         </li>
                         <li>
-                            <a href="/signin">Sign in</a>
+                            <Link to="/signin">Sign in</Link>
                         </li>
                     </ul>
                 )}
