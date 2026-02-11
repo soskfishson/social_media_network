@@ -1,0 +1,28 @@
+.submit-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    width: 100%;
+    height: 100%;
+    background-color: var(--brand);
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.submit-button:hover {
+    background-color: var(--positive-main);
+}
+
+.submit-button:focus {
+    background-color: var(--secondary-main);
+}
+
+.submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: var(--gray-strong-25);
+    border: solid 1px var(--gray-strong-50);
+}

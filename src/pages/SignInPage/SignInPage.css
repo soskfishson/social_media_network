@@ -1,0 +1,11 @@
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+@media (max-width: 720px) {
+    .auth-form-button-container {
+        height: 40px;
+    }
+}
