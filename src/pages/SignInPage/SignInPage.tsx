@@ -1,12 +1,12 @@
 import AuthLayout from '../../components/AuthLayout/AuthLayout.tsx';
 import Input from '../../components/Input/Input.tsx';
-import { InputType, ToastType, ValidationState } from '../../interfaces/interfaces.ts';
+import { ButtonType, InputType, ToastType, ValidationState } from '../../interfaces/interfaces.ts';
 import EmailIcon from '../../assets/Email.svg?react';
 import PasswordIcon from '../../assets/Eye.svg?react';
-import SubmitButton from '../../components/SubmitButton/SubmitButton.tsx';
+import Button from '../../components/Button/Button.tsx';
 import { type SyntheticEvent, useReducer } from 'react';
 import useToast from '../../hooks/useToast.ts';
-import './SignInPage.css'
+import './SignInPage.css';
 import useAuth from '../../hooks/useAuth.ts';
 
 interface SignInState {
@@ -162,10 +162,10 @@ const SignInPage = () => {
                 />
 
                 <div className="auth-form-button-container">
-                    <SubmitButton
+                    <Button
                         label={state.isSubmitting ? 'Signing In...' : 'Sign In'}
                         disabled={state.isSubmitting}
-                        type="submit"
+                        type={ButtonType.SUBMIT}
                     />
                 </div>
             </form>

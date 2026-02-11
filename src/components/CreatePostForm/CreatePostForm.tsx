@@ -1,8 +1,9 @@
 import { useReducer, useState, type ChangeEvent, type SyntheticEvent } from 'react';
-import SubmitButton from '../SubmitButton/SubmitButton';
+import Button from '../Button/Button.tsx';
 import useAuth from '../../hooks/useAuth.ts';
 import './CreatePostForm.css';
 import CreatePostModal from '../CreatePostModal/CreatePostModal.tsx';
+import { ButtonType } from '../../interfaces/interfaces.ts';
 
 interface CreatePostFormState {
     text: string;
@@ -96,9 +97,9 @@ const CreatePostForm = () => {
                 </div>
 
                 <div className="cp-button-wrapper">
-                    <SubmitButton
+                    <Button
                         label={isSubmitting ? "Posting..." : "Tell everyone"}
-                        type="submit"
+                        type={ButtonType.SUBMIT}
                         disabled={isSubmitting || !text.trim()}
                     />
                 </div>

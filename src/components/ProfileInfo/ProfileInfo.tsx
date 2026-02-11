@@ -1,9 +1,9 @@
-import { useReducer, type SyntheticEvent } from 'react';
+import { type SyntheticEvent, useReducer } from 'react';
 import useAuth from '../../hooks/useAuth.ts';
 import Input from '../Input/Input.tsx';
 import useTheme from '../../hooks/useTheme.ts';
-import { InputType, ThemeTypes, ToastType } from '../../interfaces/interfaces.ts';
-import SubmitButton from '../SubmitButton/SubmitButton.tsx';
+import { ButtonType, InputType, ThemeTypes, ToastType } from '../../interfaces/interfaces.ts';
+import Button from '../Button/Button.tsx';
 import UserIcon from '../../assets/User.svg?react';
 import EmailIcon from '../../assets/Email.svg?react';
 import PencilIcon from '../../assets/PencilIcon.svg?react';
@@ -141,13 +141,13 @@ const ProfileInfo = () => {
                     />
                     <div className="profile-photo-info">
                         <h3 className="profile-name">{user?.name}</h3>
-                        <button
-                            type="button"
+                        <Button
+                            type={ButtonType.BUTTON}
                             onClick={handlePhotoClick}
                             className="change-photo-btn"
                         >
                             Change profile photo
-                        </button>
+                        </Button>
                     </div>
                 </div>
 
@@ -184,7 +184,7 @@ const ProfileInfo = () => {
                     />
 
                     <div className='save-button-container'>
-                        <SubmitButton
+                        <Button
                             label={formState.isSubmitting ? 'Saving...' : 'Save Profile Changes'}
                             disabled={formState.isSubmitting}
                         />
@@ -212,7 +212,7 @@ const ProfileInfo = () => {
 
                 <h2 className="section-title actions-title">Actions</h2>
                 <div className="logout-button-container">
-                    <SubmitButton label='Logout' onClick={handleLogout} />
+                    <Button label='Logout' onClick={handleLogout} />
                 </div>
             </div>
         </div>

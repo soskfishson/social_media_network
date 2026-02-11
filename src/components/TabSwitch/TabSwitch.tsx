@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import './TabSwitch.css';
+import Button from '../Button/Button.tsx';
+import { ButtonType } from '../../interfaces/interfaces.ts';
 
 interface Tab {
     id: string;
@@ -23,14 +25,14 @@ const TabSwitch = ({ tabs, defaultTab, onTabChange }: TabSwitchProps) => {
     return (
         <div className="tab-switch">
             {tabs.map((tab) => (
-                <button
+                <Button
                     key={tab.id}
                     className={`tab-switch-button ${activeTab === tab.id ? 'active' : ''}`}
                     onClick={() => handleTabClick(tab.id)}
-                    type="button"
+                    type={ButtonType.BUTTON}
                 >
                     {tab.label}
-                </button>
+                </Button>
             ))}
         </div>
     );

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Logo from '../../assets/logo.svg?react';
 import useAuth from '../../hooks/useAuth';
 import './BurgerMenu.css';
+import Button from '../Button/Button.tsx';
+import { ButtonType } from '../../interfaces/interfaces.ts';
 
 const BurgerMenu = () => {
     const { isLoggedIn, user } = useAuth();
@@ -20,15 +22,15 @@ const BurgerMenu = () => {
     };
     return (
         <>
-            <button
+            <Button
                 className={`burger-button ${isOpen ? 'open' : ''}`}
                 onClick={toggleMenu}
-                aria-label="Toggle menu"
+                type={ButtonType.BUTTON}
             >
                 <span></span>
                 <span></span>
                 <span></span>
-            </button>
+            </Button>
 
             {isOpen && <div className="burger-overlay" onClick={closeMenu} />}
 

@@ -113,3 +113,9 @@ export interface AuthContextType {
     register: (data: RegisterPayload) => Promise<void>;
     logout: () => void;
 }
+
+export enum ButtonType {
+    BUTTON = 'button',
+    SUBMIT = 'submit',
+    CLOSE = 'close',
+}

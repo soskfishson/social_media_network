@@ -1,5 +1,5 @@
-import { useState, type ChangeEvent } from 'react';
-import { InputType, ValidationState, type InputProps } from '../../interfaces/interfaces.ts';
+import { type ChangeEvent, useState } from 'react';
+import { ButtonType, type InputProps, InputType, ValidationState } from '../../interfaces/interfaces.ts';
 import InfoIcon from '../../assets/InfoIcon.svg?react';
 import InfoIconError from '../../assets/InfoIconError.svg?react';
 import ShowPassword from '../../assets/ShowPassword.svg?react';
@@ -7,6 +7,7 @@ import HidePassword from '../../assets/HidePassword.svg?react';
 import SuccessIcon from '../../assets/Success.svg?react';
 import FileIcon from '../../assets/File.svg?react';
 import './Input.css';
+import Button from '../Button/Button.tsx';
 
 const Input = ({
                    type,
@@ -112,9 +113,9 @@ const Input = ({
                             <InfoIconError />
                         </span>
                         {errorMessage}
-                        <button className="input-message-info">
+                        <Button type={ButtonType.BUTTON} className="input-message-info">
                             <InfoIcon />
-                        </button>
+                        </Button>
                     </div>
                 )}
             </div>
@@ -156,13 +157,13 @@ const Input = ({
                         <span className="input-check-icon">✓</span>
                     )}
                     {type === InputType.PASSWORD && showPasswordToggle && (
-                        <button
-                            type="button"
+                        <Button
+                            type={ButtonType.BUTTON}
                             className="input-password-toggle"
                             onClick={togglePasswordVisibility}
                         >
                             {showPassword ? <HidePassword /> : <ShowPassword />}
-                        </button>
+                        </Button>
                     )}
                 </div>
             </div>
@@ -182,9 +183,9 @@ const Input = ({
                         <InfoIconError />
                     </span>
                     {errorMessage}
-                    <button className="input-message-info">
+                    <Button type={ButtonType.BUTTON} className="input-message-info">
                         <InfoIcon />
-                    </button>
+                    </Button>
                 </div>
             )}
 

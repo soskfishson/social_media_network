@@ -1,10 +1,10 @@
-import { useReducer, type SyntheticEvent } from 'react';
+import { type SyntheticEvent, useReducer } from 'react';
 import Input from '../Input/Input.tsx';
-import { InputType } from '../../interfaces/interfaces.ts';
-import SubmitButton from '../SubmitButton/SubmitButton.tsx';
+import { ButtonType, InputType } from '../../interfaces/interfaces.ts';
+import Button from '../Button/Button.tsx';
 import EmailIcon from '../../assets/Email.svg?react';
 import PencilIcon from '../../assets/PencilIcon.svg?react';
-import './CreatePostModal.css'
+import './CreatePostModal.css';
 
 interface CreatePostFormState {
     title: string;
@@ -100,14 +100,13 @@ const CreatePostModal = ({ title: initialTitle, isOpen, onClose }: CreatePostMod
                 onClick={(e) => e.stopPropagation()} >
                 <header className="modal-header">
                     <h2>Create a new post</h2>
-                    <button
-                        type="button"
+                    <Button
+                        type={ButtonType.CLOSE}
                         onClick={handleClose}
                         className="close-button"
-                        aria-label="Close modal"
                     >
                         ×
-                    </button>
+                    </Button>
                 </header>
 
                 <form onSubmit={handleSubmit} className="modal-form">
@@ -150,7 +149,7 @@ const CreatePostModal = ({ title: initialTitle, isOpen, onClose }: CreatePostMod
                     />
 
                     <div className="button-wrapper">
-                        <SubmitButton
+                        <Button
                             label={formState.isSubmitting ? 'Creating...' : 'Create'}
                             disabled={formState.isSubmitting}
                         />

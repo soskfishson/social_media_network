@@ -34,55 +34,43 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const login = async ({ email, password }: LoginPayload): Promise<void> => {
         setIsLoading(true);
 
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                if (email === mockUserData.email && password === mockUserData.password) {
-                    const newAccessToken = generateMockToken();
-                    const newRefreshToken = generateMockToken();
+        if (email === mockUserData.email && password === mockUserData.password) {
+            const newAccessToken = generateMockToken();
+            const newRefreshToken = generateMockToken();
 
-                    setAccessToken(newAccessToken);
-                    setRefreshToken(newRefreshToken);
-                    setUser(mockUserData);
+            setAccessToken(newAccessToken);
+            setRefreshToken(newRefreshToken);
+            setUser(mockUserData);
 
-                    localStorage.setItem('accessToken', newAccessToken);
-                    localStorage.setItem('refreshToken', newRefreshToken);
-                    localStorage.setItem('user', JSON.stringify(mockUserData));
+            localStorage.setItem('accessToken', newAccessToken);
+            localStorage.setItem('refreshToken', newRefreshToken);
+            localStorage.setItem('user', JSON.stringify(mockUserData));
 
-                    resolve();
-                } else {
-                    reject(new Error('Неверный email или пароль'));
-                }
-                setIsLoading(false);
-            }, 1000);
-        });
+        } else {
+            new Error('Неверный email или пароль');
+        }
+        setIsLoading(false);
     };
 
     const register = async (data: RegisterPayload): Promise<void> => {
         setIsLoading(true);
 
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const newUser: User = {
-                    ...data,
-                    description: '',
-                    pfplink: 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + data.name
-                };
+        const newUser: User = {
+            ...data,
+            description: '',
+            pfplink: 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + data.name
+        };
 
-                const newAccessToken = generateMockToken();
-                const newRefreshToken = generateMockToken();
+        const newAccessToken = generateMockToken();
+        const newRefreshToken = generateMockToken();
 
-                setAccessToken(newAccessToken);
-                setRefreshToken(newRefreshToken);
-                setUser(newUser);
+        setAccessToken(newAccessToken);
+        setRefreshToken(newRefreshToken);
+        setUser(newUser);
 
-                localStorage.setItem('accessToken', newAccessToken);
-                localStorage.setItem('refreshToken', newRefreshToken);
-                localStorage.setItem('user', JSON.stringify(newUser));
-
-                resolve();
-                setIsLoading(false);
-            }, 1000);
-        });
+        localStorage.setItem('accessToken', newAccessToken);
+        localStorage.setItem('refreshToken', newRefreshToken);
+        localStorage.setItem('user', JSON.stringify(newUser));
     };
 
     const logout = () => {

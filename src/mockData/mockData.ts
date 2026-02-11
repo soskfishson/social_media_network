@@ -92,16 +92,48 @@ export const mockPosts:PostData[]  = [
     }
 ];
 
-export const mockSuggestedPeople = [
-    { id: 1, title: 'Pacific Purgatory', description: '@paxpacifica', pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/5c6cb67ddcfe8b5de5fe0357557bfa86.jpg#5c6cb67ddcfe8b5de5fe0357557bfa86' },
-    { id: 2, title: 'Leawn', description: '@crustsox', pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/559b80095fec9e836ed0bb89194374b0.jpg#559b80095fec9e836ed0bb89194374b0' },
-    { id: 3, title: 'Heelflip', description: '@techclub', pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/b98815e043c3e6558ebe3986d73f7d64.jpg#b98815e043c3e6558ebe3986d73f7d64' },
-    { id: 4, title: 'Rick Reese', description: '@normie70', pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/b19325613c903a3a9562e8865544373d.jpg#b19325613c903a3a9562e8865544373d' },
-    { id: 5, title: 'Arin', description: '@arin', pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/375f98986c617513e0f2146f374c8ea3.jpg#375f98986c617513e0f2146f374c8ea3' }
-];
-
-export const mockCommunities = [
-    { id: 1, title: 'Tech Club', description: '11.7k members', pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/c2988b9c064c3f6dbd0bced2139ab419.jpg#c2988b9c064c3f6dbd0bced2139ab419' },
-    { id: 2, title: 'New World Order', description: '9k members', pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/110b1d0ffa86ebe72311b2cfb0ffca31.jpg#110b1d0ffa86ebe72311b2cfb0ffca31' },
-    { id: 3, title: 'Misatocore', description: '1.2k members', pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/dd2227ad55f5eb2d1d834a55afdcb757.jpg#dd2227ad55f5eb2d1d834a55afdcb757' }
-];
+export const mockSidebar = [
+    {
+        title: 'Suggested people',
+        items: [
+            {
+                id: 1,
+                title: 'Pacific Purgatory',
+                description: '@paxpacifica',
+                pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/5c6cb67ddcfe8b5de5fe0357557bfa86.jpg#5c6cb67ddcfe8b5de5fe0357557bfa86',
+            },
+                {
+                    id: 2,
+                    title: 'Leawn',
+                    description: '@crustsox',
+                    pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/559b80095fec9e836ed0bb89194374b0.jpg#559b80095fec9e836ed0bb89194374b0',
+                },
+                {
+                    id: 3,
+                    title: 'Heelflip',
+                    description: '@techclub',
+                    pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/b98815e043c3e6558ebe3986d73f7d64.jpg#b98815e043c3e6558ebe3986d73f7d64',
+                },
+                {
+                    id: 4,
+                    title: 'Rick Reese',
+                    description: '@normie70',
+                    pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/b19325613c903a3a9562e8865544373d.jpg#b19325613c903a3a9562e8865544373d',
+                },
+                {
+                    id: 5,
+                    title: 'Arin',
+                    description: '@arin',
+                    pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/375f98986c617513e0f2146f374c8ea3.jpg#375f98986c617513e0f2146f374c8ea3',
+                }
+            ],
+    },
+    {
+        title: 'Communities you might like',
+        items: [
+            { id: 1, title: 'Tech Club', description: '11.7k members', pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/c2988b9c064c3f6dbd0bced2139ab419.jpg#c2988b9c064c3f6dbd0bced2139ab419' },
+            { id: 2, title: 'New World Order', description: '9k members', pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/110b1d0ffa86ebe72311b2cfb0ffca31.jpg#110b1d0ffa86ebe72311b2cfb0ffca31' },
+            { id: 3, title: 'Misatocore', description: '1.2k members', pictureLink: 'https://lastfm.freetls.fastly.net/i/u/770x0/dd2227ad55f5eb2d1d834a55afdcb757.jpg#dd2227ad55f5eb2d1d834a55afdcb757' }
+        ]
+    }
+]

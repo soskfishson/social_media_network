@@ -1,8 +1,8 @@
-import { useState, useReducer, type SyntheticEvent } from 'react';
-import SubmitButton from '../SubmitButton/SubmitButton';
+import { type SyntheticEvent, useReducer, useState } from 'react';
+import Button from '../Button/Button.tsx';
 import Input from '../Input/Input';
 import useTimeAgo from '../../hooks/useTimeAgo';
-import { InputType, ValidationState, type PostData } from '../../interfaces/interfaces.ts';
+import { ButtonType, InputType, type PostData, ValidationState } from '../../interfaces/interfaces.ts';
 import useAuth from '../../hooks/useAuth';
 import LikeIcon from '../../assets/like.svg?react';
 import CommentIcon from '../../assets/comments.svg?react';
@@ -65,11 +65,8 @@ const Post = ({ post }: PostProps) => {
         }
 
         dispatch({ type: FormActionType.SUBMIT_START });
-
-        setTimeout(() => {
-            console.log('Submitted comment:', formState.text);
-            dispatch({ type: FormActionType.SUBMIT_SUCCESS });
-        }, 1000);
+        console.log('Submitted comment:', formState.text);
+        dispatch({ type: FormActionType.SUBMIT_SUCCESS });
     };
 
     const getValidationState = (): ValidationState => {
@@ -113,15 +110,18 @@ const Post = ({ post }: PostProps) => {
 
             <footer className="post-footer">
                 <div className="post-actions">
-                    <button
-                        type="button"
+                    <Button
+                        type={ButtonType.BUTTON}
                         className={`action-btn ${isLiked ? 'liked' : ''}`}
                         onClick={toggleLike}>
                         <LikeIcon />
                         <span>{post.likes} likes</span>
-                    </button>
+                    </Button>
 
-                    <button type="button" className="action-btn" onClick={toggleCommentsVisibility}>
+                    <Button
+                        type={ButtonType.BUTTON}
+                        className="action-btn"
+                        onClick={toggleCommentsVisibility}>
                         <CommentIcon />
                         <span>
                             {isLoggedIn
@@ -129,12 +129,15 @@ const Post = ({ post }: PostProps) => {
                                 : 'Login to view comments'
                             }
                         </span>
-                    </button>
+                    </Button>
 
                     {isLoggedIn && (
-                        <button type="button" className="action-btn" onClick={toggleCommentsVisibility}>
+                        <Button
+                            type={ButtonType.BUTTON}
+                            className="action-btn"
+                            onClick={toggleCommentsVisibility}>
                             {commentsShown ? <ChevronExpanded /> : <ChevronHidden />}
-                        </button>
+                        </Button>
                     )}
                 </div>
 
@@ -161,9 +164,9 @@ const Post = ({ post }: PostProps) => {
                             />
 
                             <div className="submit-wrapper">
-                                <SubmitButton
+                                <Button
                                     label={formState.isSubmitting ? "Posting..." : "Post Comment"}
-                                    type="submit"
+                                    type={ButtonType.SUBMIT}
                                     disabled={formState.isSubmitting || !formState.text.trim()}
                                 />
                             </div>
