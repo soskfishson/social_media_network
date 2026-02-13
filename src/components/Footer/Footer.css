@@ -11,7 +11,7 @@
 
 .footer-text {
     color: var(--brand);
-    font-size: 28px;
+    font-size: 18px;
     font-family: 'Poppins', sans-serif;
 }
 
@@ -20,6 +20,6 @@
         height: 56px;
     }
     .footer-text {
-        font-size: 18px;
+        font-size: 14px;
     }
 }

@@ -1,6 +1,7 @@
 import { type SyntheticEvent, useReducer } from 'react';
 import Input from '../Input/Input.tsx';
-import { ButtonType, InputType } from '../../interfaces/interfaces.ts';
+import { ButtonType, InputType, ToastType } from '../../interfaces/interfaces.ts';
+import useToast from '../../hooks/useToast.ts';
 import Button from '../Button/Button.tsx';
 import EmailIcon from '../../assets/Email.svg?react';
 import PencilIcon from '../../assets/PencilIcon.svg?react';
@@ -64,23 +65,22 @@ const CreatePostModal = ({ title: initialTitle, isOpen, onClose }: CreatePostMod
         ...initialState,
         title: initialTitle || ''
     });
+    const { addToast } = useToast();
 
     const handleSubmit = async (e: SyntheticEvent) => {
         e.preventDefault();
         if (!formState.title || !formState.description) {
-            console.log('Please fill in all fields');
+            addToast('Please fill in all fields', ToastType.ERROR);
             return;
         }
         dispatch({ type: FormActionType.SUBMIT_START });
 
         try {
-            console.log('Creating post:', formState);
-
             dispatch({ type: FormActionType.SUBMIT_SUCCESS });
             dispatch({ type: FormActionType.RESET });
             onClose();
         } catch (error) {
-            console.error('Failed to create post', error);
+            addToast(`Failed to create post ${error}`, ToastType.ERROR);
             dispatch({ type: FormActionType.SUBMIT_SUCCESS });
         }
     };

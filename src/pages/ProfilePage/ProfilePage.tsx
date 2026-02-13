@@ -18,7 +18,7 @@ const ProfilePage = () => {
     };
 
     return (
-        <>
+        <div className='profile-page-container'>
             <Header/>
                 <div className="profile-page">
                     <TabSwitch
@@ -36,7 +36,7 @@ const ProfilePage = () => {
                     )}
                 </div>
             <Footer/>
-        </>
+        </div>
     )
 }
 

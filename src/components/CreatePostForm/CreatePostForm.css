@@ -5,7 +5,6 @@
     gap: 12px;
     padding: 12px;
     width: 100%;
-    max-width: 700px;
     height: 88px;
     box-sizing: border-box;
     background-color: var(--bg-app);
@@ -40,8 +39,7 @@
 }
 
 .cp-input::placeholder {
-    color: var(--text-secondary);
-    opacity: 0.8;
+    color: var(--text-primary);
 }
 
 .cp-button-wrapper {

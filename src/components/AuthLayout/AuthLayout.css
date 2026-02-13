@@ -33,14 +33,14 @@
 
 .auth-subtitle {
     font-size: 14px;
-    color: var(--surface-3);
+    color: var(--text-primary);
     margin: 0;
 }
 
 .auth-bottom-text {
     text-align: center;
     font-size: 14px;
-    color: var(--surface-3);
+    color: var(--text-primary);
     margin-top: 24px;
 }
 
@@ -52,4 +52,11 @@
 
 .auth-link:hover {
     color: var(--brand);
+}
+
+@media (max-width: 720px) {
+    .auth-container {
+        width: 100%;
+        margin: auto;
+    }
 }

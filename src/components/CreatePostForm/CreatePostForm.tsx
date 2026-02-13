@@ -56,16 +56,11 @@ const CreatePostForm = () => {
     const handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
 
-        if (!formState.text.trim()) {
-            return;
-        }
-
         dispatch({ type: FormActionType.SUBMIT_START });
 
         setModalTitle(formState.text);
         setIsModalOpen(true);
 
-        console.log('Opening modal with text:', formState.text);
         dispatch({ type: FormActionType.SUBMIT_SUCCESS });
     };
 
@@ -100,7 +95,7 @@ const CreatePostForm = () => {
                     <Button
                         label={isSubmitting ? "Posting..." : "Tell everyone"}
                         type={ButtonType.SUBMIT}
-                        disabled={isSubmitting || !text.trim()}
+                        disabled={isSubmitting}
                     />
                 </div>
             </form>

@@ -6,7 +6,7 @@
 
 .auth-terms {
     font-size: 12px;
-    color: var(--gray-strong-400);
+    color: var(--text-secondary);
     text-align: center;
     margin: 0;
 }

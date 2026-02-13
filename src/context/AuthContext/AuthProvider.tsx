@@ -14,7 +14,11 @@ const generateMockToken = () => {
     return Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
 };
 
-const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+interface AuthProviderProps {
+    children: ReactNode;
+}
+
+const AuthProvider = ({ children } : AuthProviderProps) => {
     const { addToast } = useToast();
     const [accessToken, setAccessToken] = useState<string | null>(() =>
         localStorage.getItem('accessToken')

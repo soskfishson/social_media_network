@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, type ReactNode } from 'react';
 import type { ButtonHTMLAttributes } from 'react';
 import { ButtonType } from '../../interfaces/interfaces.ts';
 import './Button.css';
@@ -6,6 +6,7 @@ import './Button.css';
 interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
     label?: string;
     type?: ButtonType;
+    children?: ReactNode;
 }
 
 class Button extends Component<ButtonProps> {
@@ -14,6 +15,7 @@ class Button extends Component<ButtonProps> {
             label,
             className,
             type = ButtonType.SUBMIT,
+            children,
             ...otherProps
         } = this.props;
 
@@ -38,7 +40,7 @@ class Button extends Component<ButtonProps> {
                 className={`${baseClass} ${className || ''}`}
                 {...otherProps}
             >
-                {displayLabel}
+                {children || displayLabel}
             </button>
         );
     }

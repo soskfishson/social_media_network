@@ -10,6 +10,8 @@
     border: none;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
 }
 
 .submit-button:hover {
@@ -45,4 +47,11 @@
 .close-button-variant:hover {
     color: var(--brand);
     background-color: rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 720px) {
+    .submit-button {
+        font-size: 0.9rem;
+        padding: 8px 10px;
+    }
 }

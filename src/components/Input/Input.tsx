@@ -125,8 +125,13 @@ const Input = ({
     return (
         <div className="input-wrapper">
             <label className="input-label">
-                <span className="input-label-icon">{icon}</span>
-                {label}
+                <span className="input-label-container">
+                    <span className="input-label-icon">{icon}</span>
+                    {label}
+                </span>
+                {validationState === ValidationState.VALID && (
+                    <span className="input-check-icon">✓</span>
+                )}
             </label>
 
             <div className={`input-container ${getStateStyle()}`}>
@@ -153,9 +158,6 @@ const Input = ({
                 )}
 
                 <div className="input-icons">
-                    {validationState === ValidationState.VALID && (
-                        <span className="input-check-icon">✓</span>
-                    )}
                     {type === InputType.PASSWORD && showPasswordToggle && (
                         <Button
                             type={ButtonType.BUTTON}

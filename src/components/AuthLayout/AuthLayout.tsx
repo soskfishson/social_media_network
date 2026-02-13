@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import './AuthLayout.css';
@@ -26,10 +27,10 @@ const AuthLayout = ({ title, subtitle, children, bottomText, bottomLink }: AuthL
                     </div>
                     {children}
                     <p className="auth-bottom-text">
-                        {bottomText} 
-                        <a href={bottomLink.href} className="auth-link">
+                        {bottomText} {' '}
+                        <Link to={bottomLink.href} className="auth-link">
                             {bottomLink.text}
-                        </a>
+                        </Link>
                     </p>
                 </div>
             </main>

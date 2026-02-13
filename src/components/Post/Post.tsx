@@ -2,7 +2,7 @@ import { type SyntheticEvent, useReducer, useState } from 'react';
 import Button from '../Button/Button.tsx';
 import Input from '../Input/Input';
 import useTimeAgo from '../../hooks/useTimeAgo';
-import { ButtonType, InputType, type PostData, ValidationState } from '../../interfaces/interfaces.ts';
+import { ButtonType, InputType, type PostData, ToastType, ValidationState } from '../../interfaces/interfaces.ts';
 import useAuth from '../../hooks/useAuth';
 import LikeIcon from '../../assets/like.svg?react';
 import CommentIcon from '../../assets/comments.svg?react';
@@ -10,6 +10,7 @@ import ChevronExpanded from '../../assets/ChevronExpanded.svg?react';
 import ChevronHidden from '../../assets/ChevronHidden.svg?react';
 import PencilIcon from '../../assets/PencilIcon.svg?react';
 import './Post.css';
+import useToast from '../../hooks/useToast.ts';
 
 interface PostProps {
     post: PostData;
@@ -52,6 +53,7 @@ const Post = ({ post }: PostProps) => {
     const [formState, dispatch] = useReducer(commentReducer, initialFormState);
     const { isLoggedIn } = useAuth();
     const [isLiked, setIsLiked] = useState<boolean>(post.isLiked);
+    const { addToast } = useToast();
 
     const toggleCommentsVisibility = () => {
         setCommentsShown(!commentsShown);
@@ -67,6 +69,7 @@ const Post = ({ post }: PostProps) => {
         dispatch({ type: FormActionType.SUBMIT_START });
         console.log('Submitted comment:', formState.text);
         dispatch({ type: FormActionType.SUBMIT_SUCCESS });
+        addToast('Your comment is published', ToastType.SUCCESS);
     };
 
     const getValidationState = (): ValidationState => {
@@ -114,27 +117,27 @@ const Post = ({ post }: PostProps) => {
                         type={ButtonType.BUTTON}
                         className={`action-btn ${isLiked ? 'liked' : ''}`}
                         onClick={toggleLike}>
-                        <LikeIcon />
-                        <span>{post.likes} likes</span>
+                            <LikeIcon />
+                            <span>{post.likes} likes</span>
                     </Button>
 
                     <Button
                         type={ButtonType.BUTTON}
                         className="action-btn"
-                        onClick={toggleCommentsVisibility}>
-                        <CommentIcon />
-                        <span>
-                            {isLoggedIn
-                                ? `${post.comments.length} comments`
-                                : 'Login to view comments'
-                            }
-                        </span>
+                        onClick={isLoggedIn ? toggleCommentsVisibility : undefined}>
+                            <CommentIcon />
+                            <span>
+                                {isLoggedIn
+                                    ? `${post.comments.length} comments`
+                                    : 'Login to view comments'
+                                }
+                            </span>
                     </Button>
 
                     {isLoggedIn && (
                         <Button
                             type={ButtonType.BUTTON}
-                            className="action-btn"
+                            className="action-btn comment-button"
                             onClick={toggleCommentsVisibility}>
                             {commentsShown ? <ChevronExpanded /> : <ChevronHidden />}
                         </Button>
