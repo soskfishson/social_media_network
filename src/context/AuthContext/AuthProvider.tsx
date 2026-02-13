@@ -51,7 +51,7 @@ const AuthProvider = ({ children } : AuthProviderProps) => {
             localStorage.setItem('user', JSON.stringify(mockUserData));
 
         } else {
-            new Error('Неверный email или пароль');
+            throw new Error('Wrong credentials');
         }
         setIsLoading(false);
     };

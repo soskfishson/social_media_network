@@ -110,28 +110,32 @@ const CreatePostModal = ({ title: initialTitle, isOpen, onClose }: CreatePostMod
                 </header>
 
                 <form onSubmit={handleSubmit} className="modal-form">
-                    <Input
-                        type={InputType.TEXT}
-                        icon={<EmailIcon/>}
-                        label='Post Title'
-                        placeholder='Enter post title'
-                        value={formState.title}
-                        onChange={(value) => dispatch({ type: FormActionType.SET_TITLE, payload: value })}
-                        disabled={formState.isSubmitting}
-                    />
+                    <div className='input-sizer'>
+                        <Input
+                            type={InputType.TEXT}
+                            icon={<EmailIcon/>}
+                            label='Post Title'
+                            placeholder='Enter post title'
+                            value={formState.title}
+                            onChange={(value) => dispatch({ type: FormActionType.SET_TITLE, payload: value })}
+                            disabled={formState.isSubmitting}
+                        />
+                    </div>
 
-                    <Input
-                        type={InputType.TEXTAREA}
-                        icon={<PencilIcon/>}
-                        label='Description'
-                        placeholder="Write description here..."
-                        value={formState.description}
-                        onChange={(value) => dispatch({
-                            type: FormActionType.SET_DESCRIPTION,
-                            payload: value
-                        })}
-                        disabled={formState.isSubmitting}
-                    />
+                    <div className='textarea-container'>
+                        <Input
+                            type={InputType.TEXTAREA}
+                            icon={<PencilIcon/>}
+                            label='Description'
+                            placeholder="Write description here..."
+                            value={formState.description}
+                            onChange={(value) => dispatch({
+                                type: FormActionType.SET_DESCRIPTION,
+                                payload: value
+                            })}
+                            disabled={formState.isSubmitting}
+                        />
+                    </div>
 
                     <Input
                         type={InputType.FILE}

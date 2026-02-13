@@ -120,14 +120,14 @@ const SignInPage = () => {
 
         try {
             await login({ email: state.email, password: state.password });
-
             dispatch({ type: ActionType.SUBMIT_SUCCESS });
             addToast('Successfully signed in!', ToastType.SUCCESS);
             navigate('/')
         } catch (error) {
-            dispatch({ type: ActionType.SUBMIT_ERROR, payload: 'Sign In failed. Please try again.' });
-            addToast('Failed to sign into account. Please try again.', ToastType.ERROR);
-            console.log(error);
+            if(error instanceof Error) {
+                dispatch({ type: ActionType.SUBMIT_ERROR, payload: 'Sign In failed. Please try again.' });
+                addToast(`Failed to sign into account${error.message ? `. ${error.message}` : ''}. Please try again.`, ToastType.ERROR);
+            }
         }
     }
 

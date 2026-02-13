@@ -83,7 +83,11 @@ const Post = ({ post }: PostProps) => {
     };
 
     const toggleLike = () => {
-        setIsLiked(!isLiked);
+        if(isLoggedIn) {
+            setIsLiked(!isLiked);
+        } else {
+            addToast('You need to log in to interract with the post', ToastType.ERROR);
+        }
     }
 
     return (
@@ -155,13 +159,12 @@ const Post = ({ post }: PostProps) => {
                             <Input
                                 type={InputType.TEXTAREA}
                                 label="Add a comment"
-                                placeholder="Write here..."
+                                placeholder="Write description here..."
                                 value={formState.text}
                                 onChange={(value) => dispatch({ type: FormActionType.SET_TEXT, payload: value })}
                                 validationState={getValidationState()}
                                 errorMessage="Reached the 200 text limit"
                                 icon={<PencilIcon />}
-                                maxLength={200}
                                 disabled={formState.isSubmitting}
                                 backgroundColor="var(--color-input-bg)"
                             />

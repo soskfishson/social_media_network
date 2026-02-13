@@ -15,9 +15,13 @@
 .create-post-modal {
     position: relative;
     width: 50%;
+    max-width: 800px;
     background-color: var(--bg-app);
     border: 1px solid var(--border-default);
-    padding: 0;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
     margin: 0;
     font-family: Inter, sans-serif;
 }
@@ -27,12 +31,11 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 24px;
 }
 
 .modal-header h2 {
-    font-size: 40px;
-    font-weight: 600;
+    font-size: 36px;
+    font-weight: 400;
     color: var(--text-primary);
     margin: 0;
     line-height: 1.4;
@@ -42,7 +45,7 @@
     background: none;
     border: none;
     color: var(--text-primary);
-    font-size: 48px;
+    font-size: 42px;
     cursor: pointer;
     padding: 0;
     display: flex;
@@ -63,17 +66,23 @@
 .modal-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 24px;
+    width: 100%;
+    gap: 16px;
 }
 
-.modal-form .input-wrapper {
-    margin: 0;
+.input-sizer {
+    width: 45%;
 }
 
 .button-wrapper {
-    width: 30%;
+    height: 44px;
+    width: 20%;
     align-self: flex-end;
+    margin-top: 8px;
+}
+
+.textarea-container {
+    max-height: 90px;
 }
 
 @media (max-width: 720px) {
@@ -83,17 +92,8 @@
         margin: 16px;
     }
 
-    .modal-header {
-        padding: 16px 20px;
-    }
-
     .modal-header h2 {
         font-size: 16px;
-    }
-
-    .modal-form {
-        padding: 20px;
-        gap: 16px;
     }
 }
 

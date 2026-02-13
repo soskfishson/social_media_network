@@ -20,7 +20,7 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
         }
         if (isLoggedIn && user) {
             return (
-                <Link to='/profile' className="header-right-side">
+                <Link to='/profile' className="header-right-side-logged">
                     <img
                         className='header-avatar'
                         src={user.pfplink}

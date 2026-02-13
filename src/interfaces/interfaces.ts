@@ -55,6 +55,7 @@ export interface InputProps {
     successMessage?: string;
     icon?: ReactNode;
     maxLength?: number;
+    showMaxLength?: boolean;
     disabled?: boolean;
     backgroundColor?: string;
     showPasswordToggle?: boolean;

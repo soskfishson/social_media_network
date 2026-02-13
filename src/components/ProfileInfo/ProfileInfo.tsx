@@ -172,16 +172,19 @@ const ProfileInfo = () => {
                         disabled={true}
                     />
 
-                    <Input
-                        type={InputType.TEXTAREA}
-                        label="Description"
-                        placeholder="Write your bio..."
-                        value={formState.description}
-                        onChange={(value) => dispatch({ type: FormActionType.SET_DESCRIPTION, payload: value })}
-                        icon={<PencilIcon />}
-                        maxLength={200}
-                        disabled={formState.isSubmitting}
-                    />
+
+                    <div className='textarea-wrapper'>
+                        <Input
+                            type={InputType.TEXTAREA}
+                            label="Description"
+                            placeholder="Write your bio..."
+                            value={formState.description}
+                            onChange={(value) => dispatch({ type: FormActionType.SET_DESCRIPTION, payload: value })}
+                            icon={<PencilIcon />}
+                            maxLength={200}
+                            disabled={formState.isSubmitting}
+                        />
+                    </div>
 
                     <div className='save-button-container'>
                         <Button
