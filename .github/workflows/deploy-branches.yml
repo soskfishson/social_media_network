@@ -2,10 +2,11 @@ name: Deploy Branch to Subfolder
 
 on:
   push:
-    branches-ignore:
-      - master
-      - main
-      - gh-pages
+    branches:
+      - '*'
+      - '!master'
+      - '!main'
+      - '!gh-pages'
 
 permissions:
   contents: write

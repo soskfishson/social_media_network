@@ -1,0 +1,15 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body, #root {
+    height: 100%;
+}
+
+body[data-theme="dark"],
+body[data-theme="light"] {
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+}

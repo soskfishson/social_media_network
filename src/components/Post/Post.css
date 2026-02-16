@@ -1,0 +1,177 @@
+.post-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 24px;
+    background-color: var(--bg-app);
+    border: 2px solid var(--surface-3);
+    border-collapse: collapse;
+}
+
+.post-card + .post-card {
+    border-top: none;
+}
+
+.post-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.post-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: var(--surface-1);
+}
+
+.post-meta {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+}
+
+.post-author-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.post-timestamp {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+}
+
+.post-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.post-figure {
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.post-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+.post-caption {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    color: var(--text-primary);
+}
+
+.post-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: var(--text-primary);
+    transition: opacity 0.2s;
+}
+
+.action-btn:hover {
+    opacity: 0.8;
+}
+
+.action-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+}
+
+.action-btn svg path{
+    fill: none;
+    stroke: var(--text-primary);
+}
+
+.action-btn.liked {
+    color: var(--negative-main);
+}
+
+.action-btn.liked svg {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+.action-btn.liked svg path{
+    fill: currentColor;
+}
+
+.comment-button svg path {
+    fill: currentColor;
+}
+
+.comments-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.comment-item {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.submit-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.submit-wrapper button {
+    width: auto;
+}
+
+@media (max-width: 720px) {
+    .post-caption {
+        font-size: 14px;
+    }
+
+    .action-btn {
+        font-size: 12px;
+    }
+}
