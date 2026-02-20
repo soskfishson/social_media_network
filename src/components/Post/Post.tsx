@@ -1,20 +1,87 @@
-import { type SyntheticEvent, useReducer, useState } from 'react';
-import Button from '../Button/Button.tsx';
-import Input from '../Input/Input';
-import useTimeAgo from '../../hooks/useTimeAgo';
-import { ButtonType, InputType, type PostData, ToastType, ValidationState } from '../../interfaces/interfaces.ts';
+import { type SyntheticEvent, useReducer, useState, memo } from 'react';
+import {
+    Avatar,
+    Box,
+    Button,
+    Card,
+    CardActions,
+    CardMedia,
+    CircularProgress,
+    Collapse,
+    Stack,
+    TextField,
+    Typography,
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import CommentIcon from '@mui/icons-material/Comment';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import { type Post as PostType, ToastType } from '../../interfaces/interfaces';
+import { useAddCommentMutation, useCommentsQuery } from '../../hooks/useCommentsQuery';
+import { useDislikeMutation, useLikeMutation } from '../../hooks/useLikeMutation';
+import { useUserQuery } from '../../hooks/useUserQuery.ts';
 import useAuth from '../../hooks/useAuth';
-import LikeIcon from '../../assets/like.svg?react';
-import CommentIcon from '../../assets/comments.svg?react';
-import ChevronExpanded from '../../assets/ChevronExpanded.svg?react';
-import ChevronHidden from '../../assets/ChevronHidden.svg?react';
-import PencilIcon from '../../assets/PencilIcon.svg?react';
-import './Post.css';
-import useToast from '../../hooks/useToast.ts';
+import useToast from '../../hooks/useToast';
+import useTimeAgo from '../../hooks/useTimeAgo';
+import CommentItem from '../CommentItem/CommentItem';
 
-interface PostProps {
-    post: PostData;
-}
+const StyledCard = styled(Card)(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px',
+    width: '100%',
+    padding: '24px',
+    backgroundColor: 'var(--bg-app)',
+    border: '2px solid var(--surface-3)',
+    borderRadius: 0,
+    boxShadow: 'none',
+    backgroundImage: 'none',
+    '& + &': {
+        borderTop: 'none',
+    },
+}));
+
+const PostHeader = styled(Box)({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: '12px',
+    width: '100%',
+});
+
+const PostCaption = styled(Typography)(({ theme }) => ({
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '20px',
+    color: 'var(--text-primary)',
+    whiteSpace: 'pre-wrap',
+    [theme.breakpoints.down(720)]: {
+        fontSize: '14px',
+    },
+}));
+
+const ActionButton = styled(Button, {
+    shouldForwardProp: (prop) => prop !== 'isLiked',
+})<{ isLiked?: boolean }>(({ theme, isLiked }) => ({
+    textTransform: 'none',
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '1rem',
+    padding: 0,
+    minWidth: 'auto',
+    color: isLiked ? 'var(--negative-main)' : 'var(--text-primary)',
+    '&:hover': {
+        backgroundColor: 'transparent',
+        opacity: 0.8,
+    },
+    '& svg': {
+        width: '24px',
+        height: '24px',
+    },
+    [theme.breakpoints.down(720)]: {
+        fontSize: '12px',
+    },
+}));
 
 interface CommentFormState {
     text: string;
@@ -32,8 +99,6 @@ interface CommentFormAction {
     payload?: string;
 }
 
-const initialFormState: CommentFormState = { text: '', isSubmitting: false };
-
 const commentReducer = (state: CommentFormState, action: CommentFormAction): CommentFormState => {
     switch (action.type) {
         case FormActionType.SET_TEXT:
@@ -47,141 +112,174 @@ const commentReducer = (state: CommentFormState, action: CommentFormAction): Com
     }
 };
 
-const Post = ({ post }: PostProps) => {
-    const postTimeStamp = useTimeAgo(post.time);
-    const [commentsShown, setCommentsShown] = useState<boolean>(false);
-    const [formState, dispatch] = useReducer(commentReducer, initialFormState);
-    const { isLoggedIn } = useAuth();
-    const [isLiked, setIsLiked] = useState<boolean>(post.isLiked);
+interface PostProps {
+    post: PostType;
+}
+
+export const PostComponent = ({ post }: PostProps) => {
+    const [formState, dispatch] = useReducer(commentReducer, { text: '', isSubmitting: false });
+    const [commentsShown, setCommentsShown] = useState(false);
+
+    const { user, isLoggedIn } = useAuth();
     const { addToast } = useToast();
+    const timeAgo = useTimeAgo(post.creationDate);
 
-    const toggleCommentsVisibility = () => {
-        setCommentsShown(!commentsShown);
-    };
+    const { data: author, isLoading: authorLoading } = useUserQuery(post.authorId);
 
-    const handleCommentSubmit = (e: SyntheticEvent) => {
-        e.preventDefault();
+    const { data: comments = [], isLoading: commentsLoading } = useCommentsQuery(post.id);
 
-        if (!formState.text.trim()) {
+    const likeMutation = useLikeMutation();
+    const dislikeMutation = useDislikeMutation();
+    const addCommentMutation = useAddCommentMutation();
+
+    const isLikedByMe = post.likedByUsers?.some((u) => u.id === user?.id) ?? false;
+
+    const handleToggleLike = () => {
+        if (!isLoggedIn) {
+            addToast('Login to like posts', ToastType.ERROR);
             return;
         }
 
-        dispatch({ type: FormActionType.SUBMIT_START });
-        console.log('Submitted comment:', formState.text);
-        dispatch({ type: FormActionType.SUBMIT_SUCCESS });
-        addToast('Your comment is published', ToastType.SUCCESS);
-    };
-
-    const getValidationState = (): ValidationState => {
-        if (!formState.text) {
-            return ValidationState.IDLE;
-        }
-        if (formState.text.length > 200) {
-            return ValidationState.INVALID;
-        }
-        return ValidationState.VALID;
-    };
-
-    const toggleLike = () => {
-        if(isLoggedIn) {
-            setIsLiked(!isLiked);
+        if (isLikedByMe) {
+            dislikeMutation.mutate(post.id, {
+                onError: () => addToast('Failed to dislike post', ToastType.ERROR),
+            });
         } else {
-            addToast('You need to log in to interract with the post', ToastType.ERROR);
+            likeMutation.mutate(post.id, {
+                onError: () => addToast('Failed to like post', ToastType.ERROR),
+            });
         }
-    }
+    };
+
+    const handleToggleComments = () => {
+        setCommentsShown(!commentsShown);
+    };
+
+    const handleCommentSubmit = async (e: SyntheticEvent) => {
+        e.preventDefault();
+        if (!formState.text.trim()) return;
+
+        dispatch({ type: FormActionType.SUBMIT_START });
+        addCommentMutation.mutate(
+            { postId: post.id, text: formState.text },
+            {
+                onSuccess: () => {
+                    dispatch({ type: FormActionType.SUBMIT_SUCCESS });
+                    addToast('Comment published!', ToastType.SUCCESS);
+                },
+                onError: () => {
+                    dispatch({ type: FormActionType.SUBMIT_SUCCESS });
+                    addToast('Failed to post comment', ToastType.ERROR);
+                },
+            },
+        );
+    };
 
     return (
-        <article className="post-card">
-            <header className="post-header">
-                <img
-                    src={post.author.pfplink}
-                    alt={`${post.author.name}'s profile`}
-                    className="post-avatar"
-                />
-                <div className="post-meta">
-                    <h3 className="post-author-name">{post.author.name}</h3>
-                    <time className="post-timestamp">{postTimeStamp}</time>
-                </div>
-            </header>
-
-            <div className="post-content">
-                {post.image ? (
-                    <figure className="post-figure">
-                        <img src={post.image} alt="Post content" className="post-image" />
-                        <figcaption className="post-caption">{post.content}</figcaption>
-                    </figure>
+        <StyledCard>
+            <PostHeader>
+                {authorLoading ? (
+                    <CircularProgress size={48} />
                 ) : (
-                    <p className="post-caption">{post.content}</p>
+                    <Avatar
+                        src={author?.profileImage || '/assets/default-avatar.png'}
+                        sx={{ width: 48, height: 48 }}
+                    />
                 )}
-            </div>
+                <Stack>
+                    <Typography sx={{ fontSize: '1rem', fontWeight: 500 }}>
+                        {author?.firstName || `User ${post.authorId}`}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                        {timeAgo}
+                    </Typography>
+                </Stack>
+            </PostHeader>
 
-            <footer className="post-footer">
-                <div className="post-actions">
-                    <Button
-                        type={ButtonType.BUTTON}
-                        className={`action-btn ${isLiked ? 'liked' : ''}`}
-                        onClick={toggleLike}>
-                            <LikeIcon />
-                            <span>{post.likes} likes</span>
-                    </Button>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {post.image && (
+                    <CardMedia
+                        component="img"
+                        image={post.image}
+                        alt="Post"
+                        sx={{ width: '100%', height: 'auto', borderRadius: '4px' }}
+                    />
+                )}
+                <PostCaption>
+                    {post.title}
+                    {post.image ? `\n${post.content}` : `. ${post.content}`}
+                </PostCaption>
+            </Box>
 
-                    <Button
-                        type={ButtonType.BUTTON}
-                        className="action-btn"
-                        onClick={isLoggedIn ? toggleCommentsVisibility : undefined}>
-                            <CommentIcon />
-                            <span>
-                                {isLoggedIn
-                                    ? `${post.comments.length} comments`
-                                    : 'Login to view comments'
-                                }
-                            </span>
-                    </Button>
+            <CardActions sx={{ padding: 0, gap: '16px' }}>
+                <ActionButton
+                    onClick={handleToggleLike}
+                    isLiked={isLikedByMe}
+                    disabled={likeMutation.isPending || dislikeMutation.isPending}
+                >
+                    {isLikedByMe ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                    <span>{post.likesCount} likes</span>
+                </ActionButton>
 
-                    {isLoggedIn && (
-                        <Button
-                            type={ButtonType.BUTTON}
-                            className="action-btn comment-button"
-                            onClick={toggleCommentsVisibility}>
-                            {commentsShown ? <ChevronExpanded /> : <ChevronHidden />}
-                        </Button>
-                    )}
-                </div>
+                <ActionButton onClick={handleToggleComments} disabled={!isLoggedIn}>
+                    <CommentIcon />
+                    <span>{isLoggedIn ? `${post.commentsCount} comments` : 'Login to view'}</span>
+                </ActionButton>
 
-                {isLoggedIn && commentsShown && (
-                    <div className="comments-section">
-                        {post.comments.map((comment, index) => (
-                            <div key={index} className="comment-item">
-                                <strong>#{index + 1}</strong> {comment}
-                            </div>
-                        ))}
-                        <form onSubmit={handleCommentSubmit} className="comment-form">
-                            <Input
-                                type={InputType.TEXTAREA}
-                                label="Add a comment"
-                                placeholder="Write description here..."
-                                value={formState.text}
-                                onChange={(value) => dispatch({ type: FormActionType.SET_TEXT, payload: value })}
-                                validationState={getValidationState()}
-                                errorMessage="Reached the 200 text limit"
-                                icon={<PencilIcon />}
-                                disabled={formState.isSubmitting}
-                                backgroundColor="var(--color-input-bg)"
-                            />
+                {isLoggedIn && (
+                    <ActionButton onClick={handleToggleComments}>
+                        {commentsShown ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+                    </ActionButton>
+                )}
+            </CardActions>
 
-                            <div className="submit-wrapper">
-                                <Button
-                                    label={formState.isSubmitting ? "Posting..." : "Post Comment"}
-                                    type={ButtonType.SUBMIT}
-                                    disabled={formState.isSubmitting || !formState.text.trim()}
+            <Collapse in={commentsShown && isLoggedIn}>
+                <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {commentsLoading ? (
+                        <CircularProgress size={20} />
+                    ) : (
+                        <Stack spacing={2}>
+                            {comments.map((comment) => (
+                                <CommentItem key={comment.id} comment={comment} />
+                            ))}
+
+                            <Box
+                                component="form"
+                                onSubmit={handleCommentSubmit}
+                                sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
+                            >
+                                <TextField
+                                    multiline
+                                    rows={3}
+                                    placeholder="Write description here..."
+                                    value={formState.text}
+                                    onChange={(e) =>
+                                        dispatch({
+                                            type: FormActionType.SET_TEXT,
+                                            payload: e.target.value,
+                                        })
+                                    }
+                                    disabled={formState.isSubmitting}
+                                    fullWidth
                                 />
-                            </div>
-                        </form>
-                    </div>
-                )}
-            </footer>
-        </article>
+                                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        disabled={formState.isSubmitting || !formState.text.trim()}
+                                        sx={{ textTransform: 'none' }}
+                                    >
+                                        {formState.isSubmitting ? 'Posting...' : 'Post Comment'}
+                                    </Button>
+                                </Box>
+                            </Box>
+                        </Stack>
+                    )}
+                </Box>
+            </Collapse>
+        </StyledCard>
     );
 };
 
+const Post = memo(PostComponent);
 export default Post;

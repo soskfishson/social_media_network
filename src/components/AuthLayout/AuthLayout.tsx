@@ -27,7 +27,7 @@ const AuthLayout = ({ title, subtitle, children, bottomText, bottomLink }: AuthL
                     </div>
                     {children}
                     <p className="auth-bottom-text">
-                        {bottomText} {' '}
+                        {bottomText}{' '}
                         <Link to={bottomLink.href} className="auth-link">
                             {bottomLink.text}
                         </Link>

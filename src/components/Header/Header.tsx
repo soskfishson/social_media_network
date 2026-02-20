@@ -14,28 +14,33 @@ interface HeaderProps {
 const Header = ({ variant = 'default' }: HeaderProps) => {
     const { isLoggedIn, user } = useAuth();
     const { theme } = useTheme();
+    console.log(user);
     const renderRightSide = () => {
         if (variant === 'simple') {
             return null;
         }
         if (isLoggedIn && user) {
             return (
-                <Link to='/profile' className="header-right-side-logged">
+                <Link to="/profile" className="header-right-side-logged">
                     <img
-                        className='header-avatar'
-                        src={user.pfplink}
-                        alt={`${user.name}'s profile`}
+                        className="header-avatar"
+                        src={user.profileImage}
+                        alt={`${user.username}'s profile`}
                     />
                     <span className="header-username">
-                        {user.name} {user.surname}
+                        {user.firstName} {user.secondName}
                     </span>
                 </Link>
             );
         } else {
             return (
                 <div className="header-right-side">
-                    <Link to="/signup" className="header-link">Sign Up</Link>
-                    <Link to="/signin" className="header-link">Sign In</Link>
+                    <Link to="/signup" className="header-link">
+                        Sign Up
+                    </Link>
+                    <Link to="/signin" className="header-link">
+                        Sign In
+                    </Link>
                 </div>
             );
         }
@@ -43,7 +48,7 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
 
     return (
         <header className={`header header-${variant}`}>
-            <Link to='/' className="header-logo-container">
+            <Link to="/" className="header-logo-container">
                 {theme === ThemeTypes.DARK ? <Logo /> : <LogoLight />}
             </Link>
             {renderRightSide()}

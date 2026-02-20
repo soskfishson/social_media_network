@@ -1,33 +1,76 @@
-import {type ReactNode} from 'react';
+import { type ReactNode } from 'react';
 
 export interface User {
-    name: string;
-    surname: string;
-    email: string;
-    password: string;
-    description: string;
-    pfplink: string;
-}
-
-export interface Author {
-    name: string;
-    pfplink: string;
-}
-
-export interface PostData {
     id: number;
-    author: Author;
-    time: Date | string;
+    username: string;
+    email?: string;
+    firstName?: string;
+    secondName?: string;
+    profileImage?: string;
+    description?: string;
+    bio?: string;
+    likesCount?: number;
+    lastLogin?: string;
+    creationDate?: string;
+    modifiedDate?: string;
+}
+
+export interface SuggestedUser {
+    id: number;
+    username: string;
+    firstName?: string;
+    secondName?: string;
+    photo?: string;
+    description?: string;
+}
+
+export interface Post {
+    id: number;
+    title: string;
     content: string;
     image?: string;
-    likes: number;
-    comments: string[];
-    isLiked: boolean;
+    authorId: number;
+    likesCount: number;
+    likedByUsers: User[];
+    commentsCount: number;
+    creationDate: string;
+    modifiedDate: string;
+    authorPhoto: string;
 }
 
-export enum ErrorType {
-    GENERIC = 'GENERIC',
-    NOT_FOUND = 'NOT_FOUND',
+export interface Group {
+    id: number;
+    title: string;
+    photo: string;
+    membersCount: number;
+}
+
+export interface Comment {
+    id: number;
+    text: string;
+    authorId: number;
+    postId: number;
+    creationDate: string;
+    modifiedDate: string;
+}
+
+export interface Like {
+    id: number;
+    postId: number;
+    userId: number;
+    creationDate: string;
+}
+
+export interface LoginPayload {
+    email: string;
+    password: string;
+}
+
+export interface RegisterPayload {
+    email: string;
+    password: string;
+    firstName?: string;
+    secondName?: string;
 }
 
 export enum InputType {
@@ -41,7 +84,57 @@ export enum InputType {
 export enum ValidationState {
     IDLE = 'IDLE',
     VALID = 'VALID',
-    INVALID = 'INVALID'
+    INVALID = 'INVALID',
+}
+
+export enum ToastType {
+    SUCCESS = 'SUCCESS',
+    ERROR = 'ERROR',
+    WARNING = 'WARNING',
+}
+
+export enum ThemeTypes {
+    DARK = 'DARK',
+    LIGHT = 'LIGHT',
+}
+
+export enum ButtonType {
+    BUTTON = 'button',
+    SUBMIT = 'submit',
+    CLOSE = 'close',
+}
+
+export interface AuthContextType {
+    accessToken: string | null;
+    user: User | null;
+    isLoggedIn: boolean;
+    isLoading: boolean;
+    login: (data: LoginPayload) => Promise<void>;
+    register: (data: RegisterPayload) => Promise<void>;
+    logout: () => void;
+}
+
+export interface ToastContextType {
+    toasts: IToast[];
+    addToast: (message: string, type: ToastType) => void;
+    removeToast: (id: string) => void;
+}
+
+export interface IToast {
+    id: string;
+    type: ToastType;
+    message: string;
+}
+
+export interface ThemeContextType {
+    theme: ThemeTypes;
+    toggleTheme: () => void;
+    setTheme: (theme: ThemeTypes) => void;
+}
+
+export enum ErrorType {
+    GENERIC = 'GENERIC',
+    NOT_FOUND = 'NOT_FOUND',
 }
 
 export interface InputProps {
@@ -61,62 +154,4 @@ export interface InputProps {
     showPasswordToggle?: boolean;
     accept?: string;
     onFileChange?: (value: File) => void;
-}
-
-export enum ToastType {
-    SUCCESS = 'SUCCESS',
-    ERROR = 'ERROR',
-    WARNING = 'WARNING',
-}
-
-export interface IToast {
-    id: string;
-    type: ToastType;
-    message: string;
-}
-
-export interface ToastContextType {
-    toasts: IToast[];
-    addToast: (message: string, type: ToastType) => void;
-    removeToast: (id: string) => void;
-}
-
-export enum ThemeTypes {
-    DARK = 'DARK',
-    LIGHT = 'LIGHT',
-}
-
-export interface ThemeContextType {
-    theme: ThemeTypes;
-    toggleTheme: () => void;
-    setTheme: (theme: ThemeTypes) => void;
-}
-
-export interface LoginPayload {
-    email: string;
-    password: string;
-}
-
-export interface RegisterPayload {
-    name: string;
-    surname: string;
-    email: string;
-    password: string;
-}
-
-export interface AuthContextType {
-    accessToken: string | null;
-    refreshToken: string | null;
-    user: User | null;
-    isLoggedIn: boolean;
-    isLoading: boolean;
-    login: (data: LoginPayload) => Promise<void>;
-    register: (data: RegisterPayload) => Promise<void>;
-    logout: () => void;
-}
-
-export enum ButtonType {
-    BUTTON = 'button',
-    SUBMIT = 'submit',
-    CLOSE = 'close',
 }

@@ -1,6 +1,7 @@
 import { type SyntheticEvent, useReducer } from 'react';
 import Input from '../Input/Input.tsx';
 import { ButtonType, InputType, ToastType } from '../../interfaces/interfaces.ts';
+import { useCreatePostMutation, uploadImage } from '../../hooks/usePostsQuery';
 import useToast from '../../hooks/useToast.ts';
 import Button from '../Button/Button.tsx';
 import EmailIcon from '../../assets/Email.svg?react';
@@ -32,7 +33,7 @@ const initialState: CreatePostFormState = {
     title: '',
     description: '',
     attachment: null,
-    isSubmitting: false
+    isSubmitting: false,
 };
 
 const reducer = (state: CreatePostFormState, action: FormAction): CreatePostFormState => {
@@ -52,7 +53,7 @@ const reducer = (state: CreatePostFormState, action: FormAction): CreatePostForm
         default:
             return state;
     }
-}
+};
 
 interface CreatePostModalProps {
     title?: string;
@@ -63,24 +64,42 @@ interface CreatePostModalProps {
 const CreatePostModal = ({ title: initialTitle, isOpen, onClose }: CreatePostModalProps) => {
     const [formState, dispatch] = useReducer(reducer, {
         ...initialState,
-        title: initialTitle || ''
+        title: initialTitle || '',
     });
     const { addToast } = useToast();
+    const createPostMutation = useCreatePostMutation();
 
     const handleSubmit = async (e: SyntheticEvent) => {
         e.preventDefault();
-        if (!formState.title || !formState.description) {
-            addToast('Please fill in all fields', ToastType.ERROR);
+
+        if (!formState.title.trim() || !formState.description.trim()) {
+            addToast('Please fill in all required fields', ToastType.ERROR);
             return;
         }
+
         dispatch({ type: FormActionType.SUBMIT_START });
 
         try {
-            dispatch({ type: FormActionType.SUBMIT_SUCCESS });
+            let imageUrl = '';
+            if (formState.attachment) {
+                imageUrl = await uploadImage(formState.attachment);
+            }
+
+            await createPostMutation.mutateAsync({
+                title: formState.title,
+                content: formState.description,
+                imageUrl,
+            });
+
             dispatch({ type: FormActionType.RESET });
+            addToast('Post created successfully!', ToastType.SUCCESS);
             onClose();
         } catch (error) {
-            addToast(`Failed to create post ${error}`, ToastType.ERROR);
+            addToast(
+                error instanceof Error ? error.message : 'Failed to create post',
+                ToastType.ERROR,
+            );
+        } finally {
             dispatch({ type: FormActionType.SUBMIT_SUCCESS });
         }
     };
@@ -93,61 +112,64 @@ const CreatePostModal = ({ title: initialTitle, isOpen, onClose }: CreatePostMod
     if (!isOpen) return null;
 
     return (
-        <div className='modal-container' onClick={onClose}>
+        <div className="modal-container" onClick={onClose}>
             <dialog
                 open={isOpen}
                 className="create-post-modal"
-                onClick={(e) => e.stopPropagation()} >
+                onClick={(e) => e.stopPropagation()}
+            >
                 <header className="modal-header">
                     <h2>Create a new post</h2>
-                    <Button
-                        type={ButtonType.CLOSE}
-                        onClick={handleClose}
-                        className="close-button"
-                    >
+                    <Button type={ButtonType.CLOSE} onClick={handleClose} className="close-button">
                         ×
                     </Button>
                 </header>
 
                 <form onSubmit={handleSubmit} className="modal-form">
-                    <div className='input-sizer'>
+                    <div className="input-sizer">
                         <Input
                             type={InputType.TEXT}
-                            icon={<EmailIcon/>}
-                            label='Post Title'
-                            placeholder='Enter post title'
+                            icon={<EmailIcon />}
+                            label="Post Title"
+                            placeholder="Enter post title"
                             value={formState.title}
-                            onChange={(value) => dispatch({ type: FormActionType.SET_TITLE, payload: value })}
+                            onChange={(value) =>
+                                dispatch({ type: FormActionType.SET_TITLE, payload: value })
+                            }
                             disabled={formState.isSubmitting}
                         />
                     </div>
 
-                    <div className='textarea-container'>
+                    <div className="textarea-container">
                         <Input
                             type={InputType.TEXTAREA}
-                            icon={<PencilIcon/>}
-                            label='Description'
+                            icon={<PencilIcon />}
+                            label="Description"
                             placeholder="Write description here..."
                             value={formState.description}
-                            onChange={(value) => dispatch({
-                                type: FormActionType.SET_DESCRIPTION,
-                                payload: value
-                            })}
+                            onChange={(value) =>
+                                dispatch({
+                                    type: FormActionType.SET_DESCRIPTION,
+                                    payload: value,
+                                })
+                            }
                             disabled={formState.isSubmitting}
                         />
                     </div>
 
                     <Input
                         type={InputType.FILE}
-                        label=''
-                        placeholder='Select a file or drag and drop here'
+                        label=""
+                        placeholder="Select a file or drag and drop here"
                         value=""
-                        backgroundColor='var(--bg-app)'
+                        backgroundColor="var(--bg-app)"
                         onChange={() => {}}
-                        onFileChange={(file) => dispatch({
-                            type: FormActionType.SET_ATTACHMENT,
-                            payload: file
-                        })}
+                        onFileChange={(file) =>
+                            dispatch({
+                                type: FormActionType.SET_ATTACHMENT,
+                                payload: file,
+                            })
+                        }
                         accept=".jpg,.jpeg,.png,.pdf"
                         disabled={formState.isSubmitting}
                     />
@@ -162,6 +184,6 @@ const CreatePostModal = ({ title: initialTitle, isOpen, onClose }: CreatePostMod
             </dialog>
         </div>
     );
-}
+};
 
 export default CreatePostModal;

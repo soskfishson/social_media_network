@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { type IToast } from '../../interfaces/interfaces.ts';
 import Toast from './Toast';
 import './Toast.css';
@@ -8,12 +9,16 @@ interface ToastContainerProps {
 }
 
 const ToastContainer = ({ toasts, onRemove }: ToastContainerProps) => {
-    return (
+    if (toasts.length === 0) return null;
+    const portalRoot = document.getElementById('portal-root') || document.body;
+
+    return createPortal(
         <div className="toast-container">
-            {toasts.map(toast => (
+            {toasts.map((toast) => (
                 <Toast key={toast.id} toast={toast} onRemove={onRemove} />
             ))}
-        </div>
+        </div>,
+        portalRoot,
     );
 };
 

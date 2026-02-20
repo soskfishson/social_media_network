@@ -23,7 +23,7 @@ interface CreatePostFormAction {
 
 const initialState: CreatePostFormState = {
     text: '',
-    isSubmitting: false
+    isSubmitting: false,
 };
 
 const reducer = (state: CreatePostFormState, action: CreatePostFormAction): CreatePostFormState => {
@@ -41,7 +41,7 @@ const reducer = (state: CreatePostFormState, action: CreatePostFormAction): Crea
         default:
             return state;
     }
-}
+};
 
 const CreatePostForm = () => {
     const [formState, dispatch] = useReducer(reducer, initialState);
@@ -74,11 +74,7 @@ const CreatePostForm = () => {
     return (
         <>
             <form className="create-post-form" onSubmit={handleSubmit}>
-                <img
-                    src={user!.pfplink}
-                    alt="User Avatar"
-                    className="cp-avatar"
-                />
+                <img src={user!.profileImage} alt="User Avatar" className="cp-avatar" />
 
                 <div className="cp-input-container">
                     <input
@@ -93,7 +89,7 @@ const CreatePostForm = () => {
 
                 <div className="cp-button-wrapper">
                     <Button
-                        label={isSubmitting ? "Posting..." : "Tell everyone"}
+                        label={isSubmitting ? 'Posting...' : 'Tell everyone'}
                         type={ButtonType.SUBMIT}
                         disabled={isSubmitting}
                     />
@@ -109,6 +105,6 @@ const CreatePostForm = () => {
             )}
         </>
     );
-}
+};
 
 export default CreatePostForm;

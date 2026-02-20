@@ -1,179 +1,138 @@
+import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { useNavigate } from 'react-router-dom';
 import AuthLayout from '../../components/AuthLayout/AuthLayout.tsx';
 import Input from '../../components/Input/Input.tsx';
-import { ButtonType, InputType, ToastType, ValidationState } from '../../interfaces/interfaces.ts';
+import Button from '../../components/Button/Button.tsx';
 import EmailIcon from '../../assets/Email.svg?react';
 import PasswordIcon from '../../assets/Eye.svg?react';
-import Button from '../../components/Button/Button.tsx';
-import { type SyntheticEvent, useReducer } from 'react';
 import useToast from '../../hooks/useToast.ts';
 import useAuth from '../../hooks/useAuth.ts';
-import { useNavigate } from 'react-router-dom';
+import { ButtonType, InputType, ToastType, ValidationState } from '../../interfaces/interfaces.ts';
 import './SignInPage.css';
 
-interface SignInState {
-    email: string;
-    password: string;
-    isSubmitting: boolean;
-    error: string | null;
-}
+const signInSchema = z.object({
+    email: z
+        .string()
+        .min(1, { message: 'Please fill in all fields' })
+        .email({ message: 'Email is not valid' }),
+    password: z.string().min(1, { message: 'Please fill in all fields' }),
+});
 
-enum ActionType {
-    SET_EMAIL = 'SET_EMAIL',
-    SET_PASSWORD = 'SET_PASSWORD',
-    SUBMIT_START = 'SUBMIT_START',
-    SUBMIT_SUCCESS = 'SUBMIT_SUCCESS',
-    SUBMIT_ERROR = 'SUBMIT_ERROR',
-    RESET = 'RESET',
-}
-
-interface SignUpAction {
-    type: ActionType;
-    payload?: string
-}
-
-const initialState: SignInState = {
-    email: '',
-    password: '',
-    isSubmitting: false,
-    error: null
-};
-
-const reducer = (state: SignInState, action: SignUpAction): SignInState => {
-    switch (action.type) {
-        case 'SET_EMAIL':
-            if (!action.payload) {
-                console.log('Email not provided');
-                return {...state, email: ''};
-            }
-            return { ...state, email: action.payload, error: null };
-        case 'SET_PASSWORD':
-            if (!action.payload) {
-                console.log('Password not provided');
-                return {...state, password: ''};
-            }
-            return { ...state, password: action.payload, error: null };
-        case 'SUBMIT_START':
-            return { ...state, isSubmitting: true, error: null };
-        case 'SUBMIT_SUCCESS':
-            return { ...state, isSubmitting: false };
-        case 'SUBMIT_ERROR':
-            if (!action.payload) {
-                console.log('Error not provided');
-                return {...state}
-            }
-            return { ...state, isSubmitting: false, error: action.payload };
-        case 'RESET':
-            return initialState;
-        default:
-            return state;
-    }
-}
+type SignInFormValues = z.infer<typeof signInSchema>;
 
 const SignInPage = () => {
-    const [state, dispatch] = useReducer(reducer, initialState);
     const { addToast } = useToast();
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    const validateEmail = (email: string): ValidationState => {
-        if (!email) return ValidationState.IDLE;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (emailRegex.test(email)) {
-            return ValidationState.VALID;
-        }
-        return ValidationState.INVALID;
+    const {
+        control,
+        handleSubmit,
+        formState: { isSubmitting },
+    } = useForm<SignInFormValues>({
+        resolver: zodResolver(signInSchema),
+        mode: 'onChange',
+        defaultValues: {
+            email: '',
+            password: '',
+        },
+    });
+
+    const getValidationState = (
+        error: boolean,
+        isTouched: boolean,
+        value: string,
+    ): ValidationState => {
+        if (!isTouched && !value) return ValidationState.IDLE;
+        if (error) return ValidationState.INVALID;
+        if (!error && value) return ValidationState.VALID;
+        return ValidationState.IDLE;
     };
 
-    const validatePassword = (password: string): ValidationState => {
-        if (!password) {
-            return ValidationState.IDLE;
-        }
-        if (password.trim().length > 0) {
-            return ValidationState.VALID;
-        }
-        return  ValidationState.INVALID;
-    };
-
-    const handleSubmit = async(e :SyntheticEvent) =>{
-        e.preventDefault();
-
-        const emailValidation = validateEmail(state.email);
-        const passwordValidation = validatePassword(state.password);
-
-        if (!state.email || !state.password) {
-            dispatch({ type: ActionType.SUBMIT_ERROR, payload: 'Please fill in all fields' });
-            addToast('Please fill in all fields', ToastType.ERROR);
-            return;
-        }
-
-        if (emailValidation !== ValidationState.VALID) {
-            addToast('Please enter a valid email address', ToastType.ERROR);
-            return;
-        }
-
-        if (passwordValidation !== ValidationState.VALID) {
-            addToast('Password must be at least 8 characters', ToastType.ERROR);
-            return;
-        }
-
-        dispatch({ type: ActionType.SUBMIT_START });
-
+    const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
         try {
-            await login({ email: state.email, password: state.password });
-            dispatch({ type: ActionType.SUBMIT_SUCCESS });
+            await login({ email: data.email, password: data.password });
             addToast('Successfully signed in!', ToastType.SUCCESS);
-            navigate('/')
+            navigate('/');
         } catch (error) {
-            if(error instanceof Error) {
-                dispatch({ type: ActionType.SUBMIT_ERROR, payload: 'Sign In failed. Please try again.' });
-                addToast(`Failed to sign into account${error.message ? `. ${error.message}` : ''}. Please try again.`, ToastType.ERROR);
-            }
+            const errorMessage = error instanceof Error ? error.message : '';
+            addToast(
+                `Failed to sign into account${errorMessage ? `. ${errorMessage}` : ''}. Please try again.`,
+                ToastType.ERROR,
+            );
         }
-    }
+    };
+
+    const onInvalid = () => {
+        addToast('Please check your input fields', ToastType.ERROR);
+    };
 
     return (
-        <AuthLayout title='Sign in into an account'
-                    subtitle={'Enter your email and password \n' +
-                    'to sign in into this app'}
-                    bottomText="Forgot to create an account? "
-                    bottomLink={{ text: 'Sign up', href: '/signup' }}>
-            <form className="auth-form" onSubmit={handleSubmit}>
-                <Input
-                    type={InputType.EMAIL}
-                    label="Email"
-                    placeholder="Enter email"
-                    value={state.email}
-                    onChange={(value) => dispatch({ type: ActionType.SET_EMAIL, payload: value })}
-                    validationState={validateEmail(state.email)}
-                    errorMessage="Email is not valid"
-                    icon={<EmailIcon />}
-                    disabled={state.isSubmitting}
+        <AuthLayout
+            title="Sign in into an account"
+            subtitle={'Enter your email and password \n' + 'to sign in into this app'}
+            bottomText="Forgot to create an account? "
+            bottomLink={{ text: 'Sign up', href: '/signup' }}
+        >
+            <form className="auth-form" onSubmit={handleSubmit(onSubmit, onInvalid)}>
+                <Controller
+                    name="email"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                        <Input
+                            type={InputType.EMAIL}
+                            label="Email"
+                            placeholder="Enter email"
+                            value={field.value}
+                            onChange={field.onChange}
+                            validationState={getValidationState(
+                                !!fieldState.error,
+                                fieldState.isTouched,
+                                field.value,
+                            )}
+                            errorMessage={fieldState.error?.message || 'Email is not valid'}
+                            icon={<EmailIcon />}
+                            disabled={isSubmitting}
+                        />
+                    )}
                 />
 
-                <Input
-                    type={InputType.PASSWORD}
-                    label="Password"
-                    placeholder="Enter password"
-                    value={state.password}
-                    onChange={(value) => dispatch({ type: ActionType.SET_PASSWORD, payload: value })}
-                    validationState={validatePassword(state.password)}
-                    successMessage="Your password is correct"
-                    errorMessage="Incorrect password"
-                    icon={<PasswordIcon />}
-                    disabled={state.isSubmitting}
-                    showPasswordToggle={true}
+                <Controller
+                    name="password"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                        <Input
+                            type={InputType.PASSWORD}
+                            label="Password"
+                            placeholder="Enter password"
+                            value={field.value}
+                            onChange={field.onChange}
+                            validationState={getValidationState(
+                                !!fieldState.error,
+                                fieldState.isTouched,
+                                field.value,
+                            )}
+                            successMessage="Your password is correct"
+                            errorMessage={fieldState.error?.message || 'Incorrect password'}
+                            icon={<PasswordIcon />}
+                            disabled={isSubmitting}
+                            showPasswordToggle={true}
+                        />
+                    )}
                 />
 
                 <div className="auth-form-button-container">
                     <Button
-                        label={state.isSubmitting ? 'Signing In...' : 'Sign In'}
-                        disabled={state.isSubmitting}
+                        label={isSubmitting ? 'Signing In...' : 'Sign In'}
+                        disabled={isSubmitting}
                         type={ButtonType.SUBMIT}
                     />
                 </div>
             </form>
         </AuthLayout>
-    )
-}
+    );
+};
 
 export default SignInPage;
