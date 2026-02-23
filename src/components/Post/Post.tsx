@@ -157,7 +157,9 @@ export const PostComponent = ({ post }: PostProps) => {
 
     const handleCommentSubmit = async (e: SyntheticEvent) => {
         e.preventDefault();
-        if (!formState.text.trim()) return;
+        if (!formState.text.trim()) {
+            return;
+        }
 
         dispatch({ type: FormActionType.SUBMIT_START });
         addCommentMutation.mutate(
@@ -218,12 +220,12 @@ export const PostComponent = ({ post }: PostProps) => {
                     disabled={likeMutation.isPending || dislikeMutation.isPending}
                 >
                     {isLikedByMe ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                    <span>{post.likesCount} likes</span>
+                    <span>{post.likedByUsers.length} likes</span>
                 </ActionButton>
 
                 <ActionButton onClick={handleToggleComments} disabled={!isLoggedIn}>
                     <CommentIcon />
-                    <span>{isLoggedIn ? `${post.commentsCount} comments` : 'Login to view'}</span>
+                    <span>{isLoggedIn ? `${comments.length} comments` : 'Login to view'}</span>
                 </ActionButton>
 
                 {isLoggedIn && (

@@ -45,9 +45,16 @@ const SignInPage = () => {
         isTouched: boolean,
         value: string,
     ): ValidationState => {
-        if (!isTouched && !value) return ValidationState.IDLE;
-        if (error) return ValidationState.INVALID;
-        if (!error && value) return ValidationState.VALID;
+        if (!isTouched && !value) {
+            return ValidationState.IDLE;
+        }
+        if (error) {
+            return ValidationState.INVALID;
+        }
+        if (!error && value) {
+            return ValidationState.VALID;
+        }
+
         return ValidationState.IDLE;
     };
 

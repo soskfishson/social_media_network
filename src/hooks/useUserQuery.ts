@@ -10,7 +10,9 @@ async function fetchUserById(userId: number): Promise<User> {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
     });
-    if (!response.ok) throw new Error('User not found');
+    if (!response.ok) {
+        throw new Error('User not found');
+    }
     return response.json();
 }
 
@@ -18,7 +20,10 @@ export function useUserQuery(userId: number | undefined) {
     return useQuery({
         queryKey: ['user', userId],
         queryFn: () => {
-            if (!userId) throw new Error('User ID is required');
+            if (!userId) {
+                throw new Error('User ID is required');
+            }
+
             return fetchUserById(userId);
         },
         enabled: !!userId,

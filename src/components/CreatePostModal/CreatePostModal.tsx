@@ -109,7 +109,9 @@ const CreatePostModal = ({ title: initialTitle, isOpen, onClose }: CreatePostMod
         onClose();
     };
 
-    if (!isOpen) return null;
+    if (!isOpen) {
+        return null;
+    }
 
     return (
         <div className="modal-container" onClick={onClose}>

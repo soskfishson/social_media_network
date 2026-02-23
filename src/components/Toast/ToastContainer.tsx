@@ -9,7 +9,9 @@ interface ToastContainerProps {
 }
 
 const ToastContainer = ({ toasts, onRemove }: ToastContainerProps) => {
-    if (toasts.length === 0) return null;
+    if (toasts.length === 0) {
+        return null;
+    }
     const portalRoot = document.getElementById('portal-root') || document.body;
 
     return createPortal(

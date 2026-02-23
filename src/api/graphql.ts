@@ -9,8 +9,6 @@ export async function fetchPostsGraphQL() {
                 title
                 content
                 image
-                likesCount
-                commentsCount
                 creationDate
                 likedByUsers {
                     id

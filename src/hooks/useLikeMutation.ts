@@ -19,7 +19,9 @@ export function useLikeMutation() {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['posts'] });
             queryClient.setQueryData(['posts'], (oldPosts: Post[] | undefined) => {
-                if (!oldPosts) return undefined;
+                if (!oldPosts) {
+                    return undefined;
+                }
                 return oldPosts.map((post) =>
                     post.id === data.postId ? { ...post, likesCount: data.newLikesCount } : post,
                 );
@@ -39,7 +41,9 @@ export function useDislikeMutation() {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['posts'] });
             queryClient.setQueryData(['posts'], (oldPosts: Post[] | undefined) => {
-                if (!oldPosts) return undefined;
+                if (!oldPosts) {
+                    return undefined;
+                }
                 return oldPosts.map((post) =>
                     post.id === data.postId ? { ...post, likesCount: data.newLikesCount } : post,
                 );

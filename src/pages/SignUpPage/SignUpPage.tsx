@@ -26,9 +26,16 @@ const getValidationState = (
     touched: boolean,
     error: string | undefined,
 ): ValidationState => {
-    if (!touched) return ValidationState.IDLE;
-    if (error) return ValidationState.INVALID;
-    if (value && !error) return ValidationState.VALID;
+    if (!touched) {
+        return ValidationState.IDLE;
+    }
+    if (error) {
+        return ValidationState.INVALID;
+    }
+    if (value && !error) {
+        return ValidationState.VALID;
+    }
+
     return ValidationState.IDLE;
 };
 
