@@ -8,20 +8,18 @@ interface LikeResponse {
     newLikesCount: number;
 }
 
-export function useLikeMutation() {
+function usePostReactionMutation(endpoint: '/api/like' | '/api/dislike') {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async (postId: number) => {
-            const { data } = await apiClient.post<LikeResponse>('/api/like', { postId });
+            const { data } = await apiClient.post<LikeResponse>(endpoint, { postId });
             return data;
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['posts'] });
             queryClient.setQueryData(['posts'], (oldPosts: Post[] | undefined) => {
-                if (!oldPosts) {
-                    return undefined;
-                }
+                if (!oldPosts) return undefined;
                 return oldPosts.map((post) =>
                     post.id === data.postId ? { ...post, likesCount: data.newLikesCount } : post,
                 );
@@ -30,24 +28,9 @@ export function useLikeMutation() {
     });
 }
 
-export function useDislikeMutation() {
-    const queryClient = useQueryClient();
+export function usePostReactions() {
+    const like = usePostReactionMutation('/api/like');
+    const dislike = usePostReactionMutation('/api/dislike');
 
-    return useMutation({
-        mutationFn: async (postId: number) => {
-            const { data } = await apiClient.post<LikeResponse>('/api/dislike', { postId });
-            return data;
-        },
-        onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['posts'] });
-            queryClient.setQueryData(['posts'], (oldPosts: Post[] | undefined) => {
-                if (!oldPosts) {
-                    return undefined;
-                }
-                return oldPosts.map((post) =>
-                    post.id === data.postId ? { ...post, likesCount: data.newLikesCount } : post,
-                );
-            });
-        },
-    });
+    return { like, dislike };
 }

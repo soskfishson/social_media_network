@@ -35,3 +35,7 @@
         gap: 16px;
     }
 }
+
+.scroll-sentinel {
+    min-height: 1px;
+}

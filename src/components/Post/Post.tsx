@@ -20,7 +20,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { type Post as PostType, ToastType } from '../../interfaces/interfaces';
 import { useAddCommentMutation, useCommentsQuery } from '../../hooks/useCommentsQuery';
-import { useDislikeMutation, useLikeMutation } from '../../hooks/useLikeMutation';
+import { usePostReactions } from '../../hooks/useLikeMutation';
 import { useUserQuery } from '../../hooks/useUserQuery.ts';
 import useAuth from '../../hooks/useAuth';
 import useToast from '../../hooks/useToast';
@@ -128,8 +128,7 @@ export const PostComponent = ({ post }: PostProps) => {
 
     const { data: comments = [], isLoading: commentsLoading } = useCommentsQuery(post.id);
 
-    const likeMutation = useLikeMutation();
-    const dislikeMutation = useDislikeMutation();
+    const { like, dislike } = usePostReactions();
     const addCommentMutation = useAddCommentMutation();
 
     const isLikedByMe = post.likedByUsers?.some((u) => u.id === user?.id) ?? false;
@@ -141,11 +140,11 @@ export const PostComponent = ({ post }: PostProps) => {
         }
 
         if (isLikedByMe) {
-            dislikeMutation.mutate(post.id, {
+            dislike.mutate(post.id, {
                 onError: () => addToast('Failed to dislike post', ToastType.ERROR),
             });
         } else {
-            likeMutation.mutate(post.id, {
+            like.mutate(post.id, {
                 onError: () => addToast('Failed to like post', ToastType.ERROR),
             });
         }
@@ -217,7 +216,7 @@ export const PostComponent = ({ post }: PostProps) => {
                 <ActionButton
                     onClick={handleToggleLike}
                     isLiked={isLikedByMe}
-                    disabled={likeMutation.isPending || dislikeMutation.isPending}
+                    disabled={like.isPending || dislike.isPending}
                 >
                     {isLikedByMe ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                     <span>{post.likedByUsers.length} likes</span>

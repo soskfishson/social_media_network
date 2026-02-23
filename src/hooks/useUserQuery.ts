@@ -16,7 +16,7 @@ async function fetchUserById(userId: number): Promise<User> {
     return response.json();
 }
 
-export function useUserQuery(userId: number | undefined) {
+export function useUserQuery(userId: number) {
     return useQuery({
         queryKey: ['user', userId],
         queryFn: () => {

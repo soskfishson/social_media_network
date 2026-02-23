@@ -17,7 +17,7 @@
     "@mui/icons-material": "^7.3.8",
     "@mui/material": "^7.3.8",
     "@reduxjs/toolkit": "^2.11.2",
-    "@sidekick-monorepo/internship-backend": "file:../../Сцягнутыя файлы/sidekick-monorepo-internship-backend-0.0.1.tgz",
+    "@sidekick-monorepo/internship-backend": "file:../../Сцягнутыя файлы/sidekick-monorepo-internship-backend-0.0.1.1.1.1.tgz",
     "@tanstack/react-query": "^5.90.21",
     "@types/nprogress": "^0.2.3",
     "axios": "^1.13.5",

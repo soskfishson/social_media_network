@@ -25,16 +25,3 @@ export function useAddCommentMutation() {
         },
     });
 }
-
-export function useDeleteCommentMutation() {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: async (commentId: number) => {
-            await apiClient.delete(`/api/comments/${commentId}`);
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['comments'] });
-        },
-    });
-}
