@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Post } from '../interfaces/interfaces.ts';
-import { fetchPostsGraphQL } from '../api/graphql.ts';
+import type { Post } from '../interfaces/interfaces';
+import { fetchPostsGraphQL } from '../api/graphql';
 
 const BASE_URL = '';
 

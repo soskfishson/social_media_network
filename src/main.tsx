@@ -1,13 +1,13 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { startMockingSocial } from '@sidekick-monorepo/internship-backend';
-import App from './App.tsx';
-import ToastProvider from './context/ToastContext/ToastProvider.tsx';
-import ThemeProvider from './context/ThemeContext/ThemeProvider.tsx';
-import AuthProvider from './context/AuthContext/AuthProvider.tsx';
+import App from './App';
+import ToastProvider from './context/ToastContext/ToastProvider';
+import ThemeProvider from './context/ThemeContext/ThemeProvider';
+import AuthProvider from './context/AuthContext/AuthProvider';
 import { Provider } from 'react-redux';
-import { store } from './redux/store.ts';
-import { setupInterceptors } from './api/api.ts';
+import { store } from './redux/store';
+import { setupInterceptors } from './api/api';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import './styles/colors.css';
 import './styles/index.css';
@@ -22,7 +22,11 @@ const queryClient = new QueryClient({
 });
 
 async function enableMocking() {
-    await startMockingSocial('');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const isE2E = (window as any).Cypress;
+    if (!isE2E) {
+        await startMockingSocial('');
+    }
 }
 
 setupInterceptors(store);

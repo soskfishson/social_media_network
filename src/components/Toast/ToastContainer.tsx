@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom';
-import { type IToast } from '../../interfaces/interfaces.ts';
+import { type IToast } from '../../interfaces/interfaces';
 import Toast from './Toast';
 import './Toast.css';
 

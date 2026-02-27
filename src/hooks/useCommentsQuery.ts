@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Comment } from '../interfaces/interfaces.ts';
-import { apiClient } from '../api/api.ts';
+import type { Comment } from '../interfaces/interfaces';
+import { apiClient } from '../api/api';
 
 export function useCommentsQuery(postId: number) {
     return useQuery({

@@ -2,14 +2,14 @@ import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useNavigate } from 'react-router-dom';
-import AuthLayout from '../../components/AuthLayout/AuthLayout.tsx';
-import Input from '../../components/Input/Input.tsx';
-import Button from '../../components/Button/Button.tsx';
+import AuthLayout from '../../components/AuthLayout/AuthLayout';
+import Input from '../../components/Input/Input';
+import Button from '../../components/Button/Button';
 import EmailIcon from '../../assets/Email.svg?react';
 import PasswordIcon from '../../assets/Eye.svg?react';
-import useToast from '../../hooks/useToast.ts';
-import useAuth from '../../hooks/useAuth.ts';
-import { ButtonType, InputType, ToastType, ValidationState } from '../../interfaces/interfaces.ts';
+import useToast from '../../hooks/useToast';
+import useAuth from '../../hooks/useAuth';
+import { ButtonType, InputType, ToastType, ValidationState } from '../../interfaces/interfaces';
 import './SignInPage.css';
 
 const signInSchema = z.object({

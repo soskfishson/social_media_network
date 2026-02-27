@@ -3,13 +3,13 @@ import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import AuthLayout from '../../components/AuthLayout/AuthLayout';
 import Input from '../../components/Input/Input';
-import Button from '../../components/Button/Button.tsx';
+import Button from '../../components/Button/Button';
 import EmailIcon from '../../assets/Email.svg?react';
 import PasswordIcon from '../../assets/Eye.svg?react';
 import useToast from '../../hooks/useToast';
-import useAuth from '../../hooks/useAuth.ts';
+import useAuth from '../../hooks/useAuth';
 
-import { ButtonType, InputType, ToastType, ValidationState } from '../../interfaces/interfaces.ts';
+import { ButtonType, InputType, ToastType, ValidationState } from '../../interfaces/interfaces';
 import './SignUpPage.css';
 
 const validationSchema = Yup.object({
@@ -87,6 +87,7 @@ const SignUpPage = () => {
                     placeholder="Enter email"
                     value={formik.values.email}
                     onChange={(value) => formik.setFieldValue('email', value)}
+                    onBlur={() => formik.setFieldTouched('email', true)}
                     validationState={getValidationState(
                         formik.values.email,
                         !!formik.touched.email,
@@ -103,6 +104,7 @@ const SignUpPage = () => {
                     placeholder="Enter password"
                     value={formik.values.password}
                     onChange={(value) => formik.setFieldValue('password', value)}
+                    onBlur={() => formik.setFieldTouched('password', true)}
                     validationState={getValidationState(
                         formik.values.password,
                         !!formik.touched.password,

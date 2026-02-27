@@ -4,7 +4,7 @@ import {
     type InputProps,
     InputType,
     ValidationState,
-} from '../../interfaces/interfaces.ts';
+} from '../../interfaces/interfaces';
 import InfoIcon from '../../assets/InfoIcon.svg?react';
 import InfoIconError from '../../assets/InfoIconError.svg?react';
 import ShowPassword from '../../assets/ShowPassword.svg?react';
@@ -12,7 +12,7 @@ import HidePassword from '../../assets/HidePassword.svg?react';
 import SuccessIcon from '../../assets/Success.svg?react';
 import FileIcon from '../../assets/File.svg?react';
 import './Input.css';
-import Button from '../Button/Button.tsx';
+import Button from '../Button/Button';
 
 const Input = ({
     type,
@@ -20,6 +20,7 @@ const Input = ({
     placeholder,
     value,
     onChange,
+    onBlur,
     validationState = ValidationState.IDLE,
     errorMessage,
     successMessage,
@@ -92,6 +93,7 @@ const Input = ({
                     style={{ backgroundColor }}
                 >
                     <input
+                        data-testid="input-control"
                         id={`file-input-${label}`}
                         type="file"
                         className="file-upload-input"
@@ -115,7 +117,7 @@ const Input = ({
                 </label>
 
                 {validationState === ValidationState.INVALID && errorMessage && (
-                    <div className="input-message input-message-error">
+                    <div className="input-message input-message-error" data-testid="input-error">
                         <span className="input-message-icon">
                             <InfoIconError />
                         </span>
@@ -148,17 +150,20 @@ const Input = ({
                         placeholder={placeholder}
                         value={value}
                         onChange={handleChange}
+                        onBlur={onBlur}
                         disabled={disabled}
                         maxLength={maxLength}
                         style={{ backgroundColor }}
                     />
                 ) : (
                     <input
+                        data-testid="input-control"
                         type={getInputType()}
                         className="input-field"
                         placeholder={placeholder}
                         value={value}
                         onChange={handleChange}
+                        onBlur={onBlur}
                         disabled={disabled}
                         style={{ backgroundColor }}
                     />
@@ -178,7 +183,7 @@ const Input = ({
             </div>
 
             {validationState === ValidationState.VALID && successMessage && (
-                <div className="input-message input-message-success">
+                <div className="input-message input-message-success" data-testid="input-success">
                     <span className="input-message-icon">
                         <SuccessIcon />
                     </span>
@@ -187,7 +192,7 @@ const Input = ({
             )}
 
             {validationState === ValidationState.INVALID && errorMessage && (
-                <div className="input-message input-message-error">
+                <div className="input-message input-message-error" data-testid="input-error">
                     <span className="input-message-icon">
                         <InfoIconError />
                     </span>

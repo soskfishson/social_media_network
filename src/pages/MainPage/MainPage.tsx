@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
-import Header from '../../components/Header/Header.tsx';
-import Post from '../../components/Post/Post.tsx';
+import Header from '../../components/Header/Header';
+import Post from '../../components/Post/Post';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Footer from '../../components/Footer/Footer';
-import CreatePostForm from '../../components/CreatePostForm/CreatePostForm.tsx';
+import CreatePostForm from '../../components/CreatePostForm/CreatePostForm';
 import useAuth from '../../hooks/useAuth';
 import PostSkeleton from '../../components/Skeletons/PostSkeleton';
 import './MainPage.css';
-import { usePostsQuery } from '../../hooks/usePostsQuery.ts';
-import type { Post as PostType } from '../../interfaces/interfaces.ts';
+import { usePostsQuery } from '../../hooks/usePostsQuery';
+import type { Post as PostType } from '../../interfaces/interfaces';
 
 const POSTS_PER_PAGE = 5;
 
@@ -46,13 +46,13 @@ const MainPage = () => {
                     <main className="main-page-container">
                         {isLoggedIn && <CreatePostForm />}
 
-                        <section className="main-page-section">
+                        <section className="main-page-section" data-testid="post-list">
                             {isLoading && (
-                                <>
+                                <div data-testid="main-loader">
                                     <PostSkeleton />
                                     <PostSkeleton />
                                     <PostSkeleton />
-                                </>
+                                </div>
                             )}
 
                             {error && <p className="status-message error">{error.message}</p>}

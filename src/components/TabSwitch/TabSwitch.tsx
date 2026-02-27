@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './TabSwitch.css';
-import Button from '../Button/Button.tsx';
-import { ButtonType } from '../../interfaces/interfaces.ts';
+import Button from '../Button/Button';
+import { ButtonType } from '../../interfaces/interfaces';
 
 interface Tab {
     id: string;

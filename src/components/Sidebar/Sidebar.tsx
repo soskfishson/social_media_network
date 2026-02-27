@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import SidebarItem, { type LinkableItem } from '../SidebarItem/SidebarItem.tsx';
+import SidebarItem, { type LinkableItem } from '../SidebarItem/SidebarItem';
 import SidebarItemSkeleton from '../Skeletons/SidebarItemSkeleton';
 import './Sidebar.css';
-import type { Group, SuggestedUser } from '../../interfaces/interfaces.ts';
+import type { Group, SuggestedUser } from '../../interfaces/interfaces';
 
 interface SidebarState {
     suggestedUsers: LinkableItem[];

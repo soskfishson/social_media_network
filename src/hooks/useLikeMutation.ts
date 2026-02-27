@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Post } from '../interfaces/interfaces.ts';
-import { apiClient } from '../api/api.ts';
+import type { Post } from '../interfaces/interfaces';
+import { apiClient } from '../api/api';
 
 interface LikeResponse {
     status: 'liked' | 'disliked';

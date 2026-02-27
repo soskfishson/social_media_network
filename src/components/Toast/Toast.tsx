@@ -1,5 +1,5 @@
-import { ButtonType, type IToast, ToastType } from '../../interfaces/interfaces.ts';
-import Button from '../Button/Button.tsx';
+import { ButtonType, type IToast, ToastType } from '../../interfaces/interfaces';
+import Button from '../Button/Button';
 import './Toast.css';
 
 interface ToastProps {
@@ -22,7 +22,7 @@ const Toast = ({ toast, onRemove }: ToastProps) => {
     };
 
     return (
-        <div className={`toast ${getToastClass()}`}>
+        <div className={`toast ${getToastClass()}`} data-testid="toast-item">
             <span className="toast-message">{toast.message}</span>
             <Button
                 type={ButtonType.CLOSE}

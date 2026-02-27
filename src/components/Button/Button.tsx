@@ -1,12 +1,13 @@
 import { Component, type ReactNode } from 'react';
 import type { ButtonHTMLAttributes } from 'react';
-import { ButtonType } from '../../interfaces/interfaces.ts';
+import { ButtonType } from '../../interfaces/interfaces';
 import './Button.css';
 
 interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
     label?: string;
     type?: ButtonType;
     children?: ReactNode;
+    'data-testid'?: string;
 }
 
 class Button extends Component<ButtonProps> {
@@ -29,7 +30,12 @@ class Button extends Component<ButtonProps> {
         const displayLabel = label || (isCloseButton ? '×' : '');
 
         return (
-            <button type={htmlType} className={`${baseClass} ${className || ''}`} {...otherProps}>
+            <button
+                data-testid={this.props['data-testid'] || 'custom-button'}
+                type={htmlType}
+                className={`${baseClass} ${className || ''}`}
+                {...otherProps}
+            >
                 {children || displayLabel}
             </button>
         );

@@ -143,6 +143,7 @@ export interface InputProps {
     placeholder: string;
     value: string;
     onChange: (value: string) => void;
+    onBlur?: () => void;
     validationState?: ValidationState;
     errorMessage?: string;
     successMessage?: string;

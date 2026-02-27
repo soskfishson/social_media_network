@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, type PayloadAction, isAnyOf } from '@reduxjs/toolkit';
-import { apiClient } from '../api/api.ts';
-import type { User, LoginPayload, RegisterPayload } from '../interfaces/interfaces.ts';
+import { apiClient } from '../api/api';
+import type { User, LoginPayload, RegisterPayload } from '../interfaces/interfaces';
 import { AxiosError } from 'axios';
 
 interface AuthState {
