@@ -15,7 +15,8 @@
     box-sizing: border-box;
     padding: 16px 16px;
     border-radius: 12px;
-    display: flex;min-width: 300px;
+    display: flex;
+    min-width: 300px;
     align-items: center;
     justify-content: space-between;
     gap: 16px;

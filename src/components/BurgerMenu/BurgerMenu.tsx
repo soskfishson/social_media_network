@@ -39,10 +39,10 @@ const BurgerMenu = () => {
                 {isLoggedIn && user ? (
                     <>
                         <div className="burger-menu-profile">
-                            <Logo/>
+                            <Logo />
                             <img
-                                src={user.pfplink}
-                                alt={user.name}
+                                src={user.profileImage}
+                                alt={user.username}
                                 className="burger-profile-avatar"
                             />
                         </div>

@@ -1,5 +1,10 @@
 import { type ChangeEvent, useState } from 'react';
-import { ButtonType, type InputProps, InputType, ValidationState } from '../../interfaces/interfaces.ts';
+import {
+    ButtonType,
+    type InputProps,
+    InputType,
+    ValidationState,
+} from '../../interfaces/interfaces.ts';
 import InfoIcon from '../../assets/InfoIcon.svg?react';
 import InfoIconError from '../../assets/InfoIconError.svg?react';
 import ShowPassword from '../../assets/ShowPassword.svg?react';
@@ -10,22 +15,22 @@ import './Input.css';
 import Button from '../Button/Button.tsx';
 
 const Input = ({
-                   type,
-                   label,
-                   placeholder,
-                   value,
-                   onChange,
-                   validationState = ValidationState.IDLE,
-                   errorMessage,
-                   successMessage,
-                   icon,
-                   maxLength,
-                   disabled = false,
-                   backgroundColor = 'var(--input-bg)',
-                   showPasswordToggle = true,
-                   accept,
-                   onFileChange
-               }: InputProps) => {
+    type,
+    label,
+    placeholder,
+    value,
+    onChange,
+    validationState = ValidationState.IDLE,
+    errorMessage,
+    successMessage,
+    icon,
+    maxLength,
+    disabled = false,
+    backgroundColor = 'var(--input-bg)',
+    showPasswordToggle = true,
+    accept,
+    onFileChange,
+}: InputProps) => {
     const [showPassword, setShowPassword] = useState(false);
     const [fileName, setFileName] = useState<string>('');
     const charCount = value.length;
@@ -101,7 +106,9 @@ const Input = ({
                                 {fileName || placeholder || 'Select a file or drag and drop here'}
                             </span>
                             <span className="file-upload-hint">
-                                {accept ? `${accept.replace(/\./g, '').toUpperCase()}, file size no more than 10MB` : 'File size no more than 10MB'}
+                                {accept
+                                    ? `${accept.replace(/\./g, '').toUpperCase()}, file size no more than 10MB`
+                                    : 'File size no more than 10MB'}
                             </span>
                         </div>
                     </div>

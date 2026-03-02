@@ -11,13 +11,7 @@ interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'typ
 
 class Button extends Component<ButtonProps> {
     render() {
-        const {
-            label,
-            className,
-            type = ButtonType.SUBMIT,
-            children,
-            ...otherProps
-        } = this.props;
+        const { label, className, type = ButtonType.SUBMIT, children, ...otherProps } = this.props;
 
         const isCloseButton = type === ButtonType.CLOSE;
         let baseClass: string;
@@ -35,11 +29,7 @@ class Button extends Component<ButtonProps> {
         const displayLabel = label || (isCloseButton ? '×' : '');
 
         return (
-            <button
-                type={htmlType}
-                className={`${baseClass} ${className || ''}`}
-                {...otherProps}
-            >
+            <button type={htmlType} className={`${baseClass} ${className || ''}`} {...otherProps}>
                 {children || displayLabel}
             </button>
         );

@@ -1,113 +1,123 @@
 import { type SyntheticEvent, useReducer } from 'react';
+import { useAppDispatch } from '../../redux/hooks';
+import { updateProfileThunk } from '../../redux/AuthSlice.ts';
+import { z } from 'zod';
 import useAuth from '../../hooks/useAuth.ts';
-import Input from '../Input/Input.tsx';
 import useTheme from '../../hooks/useTheme.ts';
-import { ButtonType, InputType, ThemeTypes, ToastType } from '../../interfaces/interfaces.ts';
+import useToast from '../../hooks/useToast.ts';
+import {
+    ButtonType,
+    InputType,
+    ThemeTypes,
+    ToastType,
+    ValidationState,
+} from '../../interfaces/interfaces.ts';
 import Button from '../Button/Button.tsx';
+import Input from '../Input/Input.tsx';
 import UserIcon from '../../assets/User.svg?react';
 import EmailIcon from '../../assets/Email.svg?react';
 import PencilIcon from '../../assets/PencilIcon.svg?react';
 import './ProfileInfo.css';
-import useToast from '../../hooks/useToast.ts';
+
+const profileSchema = z.object({
+    username: z.string().min(3, 'Username must be at least 3 characters'),
+    email: z.string().email('Invalid email format'),
+    description: z.string().max(200, 'Bio cannot exceed 200 characters').optional(),
+});
 
 interface ProfileFormState {
     username: string;
     email: string;
     description: string;
     profilePhoto: File | null;
+    errors: Record<string, string>;
     isSubmitting: boolean;
 }
 
 enum FormActionType {
-    SET_USERNAME = 'SET_USERNAME',
-    SET_EMAIL = 'SET_EMAIL',
-    SET_DESCRIPTION = 'SET_DESCRIPTION',
+    SET_FIELD = 'SET_FIELD',
     SET_PHOTO = 'SET_PHOTO',
+    SET_ERRORS = 'SET_ERRORS',
     SUBMIT_START = 'SUBMIT_START',
     SUBMIT_SUCCESS = 'SUBMIT_SUCCESS',
 }
 
 interface FormAction {
     type: FormActionType;
-    payload?: string | File | null;
+    field?: string;
+    payload?: unknown;
 }
+
+const isErrorRecord = (value: unknown): value is Record<string, string> => {
+    return (
+        typeof value === 'object' &&
+        value !== null &&
+        !Array.isArray(value) &&
+        Object.values(value).every((v) => typeof v === 'string')
+    );
+};
 
 const reducer = (state: ProfileFormState, action: FormAction): ProfileFormState => {
     switch (action.type) {
-        case FormActionType.SET_USERNAME:
-            if (!action.payload) {
-                console.log('Username not provided');
-                return {...state, username: ''};
+        case FormActionType.SET_FIELD:
+            if (typeof action.payload === 'string' && action.field) {
+                return {
+                    ...state,
+                    [action.field]: action.payload,
+                    errors: { ...state.errors, [action.field]: '' },
+                };
             }
-            return { ...state, username: action.payload as string };
-        case FormActionType.SET_EMAIL:
-            if (!action.payload) {
-                console.log('Email not provided');
-                return {...state, email: ''};
-            }
-            return { ...state, email: action.payload as string };
-        case FormActionType.SET_DESCRIPTION:
-            if (!action.payload) {
-                console.log('Description not provided');
-                return {...state, description: ''};
-            }
-            return { ...state, description: action.payload as string };
+            return state;
+
         case FormActionType.SET_PHOTO:
-            if (!action.payload) {
-                console.log('Photo not provided');
-                return {...state, profilePhoto: null};
+            if (!(action.payload === null || action.payload instanceof File)) {
+                return state;
             }
-            return { ...state, profilePhoto: action.payload as File | null };
+            return { ...state, profilePhoto: action.payload };
+
+        case FormActionType.SET_ERRORS:
+            if (!isErrorRecord(action.payload)) {
+                return state;
+            }
+            return { ...state, errors: action.payload, isSubmitting: false };
+
         case FormActionType.SUBMIT_START:
-            return { ...state, isSubmitting: true };
+            return { ...state, isSubmitting: true, errors: {} };
+
         case FormActionType.SUBMIT_SUCCESS:
             return { ...state, isSubmitting: false };
+
         default:
             return state;
     }
 };
 
 const ProfileInfo = () => {
+    const appDispatch = useAppDispatch();
     const { user, logout } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const { addToast } = useToast();
 
     const initialState: ProfileFormState = {
-        username: user?.name || '',
+        username: user?.username || '',
         email: user?.email || '',
-        description: user?.description || '',
+        description: user?.description || user?.bio || '',
         profilePhoto: null,
-        isSubmitting: false
+        errors: {},
+        isSubmitting: false,
     };
 
     const [formState, dispatch] = useReducer(reducer, initialState);
 
-    const handleSubmit = async (e: SyntheticEvent) => {
-        e.preventDefault();
-        dispatch({ type: FormActionType.SUBMIT_START });
-
-        try {
-            console.log('Saving profile:', formState);
-            const updatedUser = {
-                ...user,
-                name: formState.username,
-                email: formState.email
-            };
-            localStorage.setItem('user', JSON.stringify(updatedUser));
-
-            setTimeout(() => {
-                dispatch({ type: FormActionType.SUBMIT_SUCCESS });
-            }, 1000);
-            addToast('Profile info has been updated successfully', ToastType.SUCCESS)
-        } catch (error) {
-            console.error('Failed to save profile', error);
-            dispatch({ type: FormActionType.SUBMIT_SUCCESS });
+    const getFieldState = (field: keyof typeof formState.errors, value: string) => {
+        if (formState.errors[field]) {
+            return ValidationState.INVALID;
         }
+        if (value.trim().length > 0) {
+            return ValidationState.VALID;
+        }
+        return ValidationState.IDLE;
     };
-
-    const photoPreview = formState.profilePhoto
-        ? URL.createObjectURL(formState.profilePhoto)
-        : user?.pfplink;
 
     const handlePhotoClick = () => {
         const input = document.createElement('input');
@@ -122,9 +132,50 @@ const ProfileInfo = () => {
         input.click();
     };
 
-    const handleLogout = () => {
-        logout();
-    }
+    const handleSubmit = async (e: SyntheticEvent) => {
+        e.preventDefault();
+
+        const result = profileSchema.safeParse({
+            username: formState.username,
+            email: formState.email,
+            description: formState.description,
+        });
+
+        if (!result.success) {
+            const fieldErrors: Record<string, string> = {};
+            result.error.issues.forEach((issue) => {
+                const path = issue.path[0] as string;
+                fieldErrors[path] = issue.message;
+            });
+
+            dispatch({ type: FormActionType.SET_ERRORS, payload: fieldErrors });
+            addToast('Please correct the highlighted errors', ToastType.ERROR);
+            return;
+        }
+
+        dispatch({ type: FormActionType.SUBMIT_START });
+
+        try {
+            await appDispatch(
+                updateProfileThunk({
+                    username: formState.username,
+                    email: formState.email,
+                    description: formState.description,
+                    file: formState.profilePhoto,
+                }),
+            ).unwrap();
+
+            dispatch({ type: FormActionType.SUBMIT_SUCCESS });
+            addToast('Profile updated successfully!', ToastType.SUCCESS);
+        } catch (error) {
+            addToast((error as string) || 'Failed to update profile', ToastType.ERROR);
+            dispatch({ type: FormActionType.SUBMIT_SUCCESS });
+        }
+    };
+
+    const photoPreview = formState.profilePhoto
+        ? URL.createObjectURL(formState.profilePhoto)
+        : user?.profileImage || '/assets/default-avatar.png';
 
     const isDarkTheme = theme === ThemeTypes.DARK;
 
@@ -134,13 +185,9 @@ const ProfileInfo = () => {
                 <h2 className="section-title">Edit profile</h2>
 
                 <div className="profile-photo-section">
-                    <img
-                        src={photoPreview   }
-                        alt={user?.name}
-                        className="profile-photo"
-                    />
+                    <img src={photoPreview} alt="avatar" className="profile-photo" />
                     <div className="profile-photo-info">
-                        <h3 className="profile-name">{user?.name}</h3>
+                        <h3 className="profile-name">{user?.username}</h3>
                         <Button
                             type={ButtonType.BUTTON}
                             onClick={handlePhotoClick}
@@ -157,9 +204,17 @@ const ProfileInfo = () => {
                         label="Username"
                         placeholder="@username123"
                         value={formState.username}
-                        onChange={() => {}}
+                        onChange={(val) =>
+                            dispatch({
+                                type: FormActionType.SET_FIELD,
+                                field: 'username',
+                                payload: val,
+                            })
+                        }
                         icon={<UserIcon />}
-                        disabled={true}
+                        errorMessage={formState.errors.username}
+                        validationState={getFieldState('username', formState.username)}
+                        disabled={formState.isSubmitting}
                     />
 
                     <Input
@@ -167,29 +222,45 @@ const ProfileInfo = () => {
                         label="Email"
                         placeholder="email@example.com"
                         value={formState.email}
-                        onChange={() => {}}
+                        onChange={(val) =>
+                            dispatch({
+                                type: FormActionType.SET_FIELD,
+                                field: 'email',
+                                payload: val,
+                            })
+                        }
                         icon={<EmailIcon />}
-                        disabled={true}
+                        errorMessage={formState.errors.email}
+                        validationState={getFieldState('email', formState.email)}
+                        disabled={formState.isSubmitting}
                     />
 
-
-                    <div className='textarea-wrapper'>
+                    <div className="textarea-wrapper">
                         <Input
                             type={InputType.TEXTAREA}
                             label="Description"
                             placeholder="Write your bio..."
                             value={formState.description}
-                            onChange={(value) => dispatch({ type: FormActionType.SET_DESCRIPTION, payload: value })}
+                            onChange={(val) =>
+                                dispatch({
+                                    type: FormActionType.SET_FIELD,
+                                    field: 'description',
+                                    payload: val,
+                                })
+                            }
                             icon={<PencilIcon />}
                             maxLength={200}
+                            errorMessage={formState.errors.description}
+                            validationState={getFieldState('description', formState.description)}
                             disabled={formState.isSubmitting}
                         />
                     </div>
 
-                    <div className='save-button-container'>
+                    <div className="save-button-container">
                         <Button
                             label={formState.isSubmitting ? 'Saving...' : 'Save Profile Changes'}
                             disabled={formState.isSubmitting}
+                            type={ButtonType.SUBMIT}
                         />
                     </div>
                 </form>
@@ -197,7 +268,6 @@ const ProfileInfo = () => {
 
             <div className="profile-preferences-section">
                 <h2 className="section-title">Preferences</h2>
-
                 <div className="preference-item">
                     <label className="theme-toggle-container">
                         <input
@@ -215,7 +285,7 @@ const ProfileInfo = () => {
 
                 <h2 className="section-title actions-title">Actions</h2>
                 <div className="logout-button-container">
-                    <Button label='Logout' onClick={handleLogout} />
+                    <Button label="Logout" onClick={logout} />
                 </div>
             </div>
         </div>

@@ -26,7 +26,7 @@
 }
 
 @media (max-width: 1240px) {
-    .main-page{
+    .main-page {
         padding: 0;
     }
     .main-page-container {
@@ -34,4 +34,8 @@
         width: 100%;
         gap: 16px;
     }
+}
+
+.scroll-sentinel {
+    min-height: 1px;
 }
