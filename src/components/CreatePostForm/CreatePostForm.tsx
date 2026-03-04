@@ -4,6 +4,7 @@ import useAuth from '../../hooks/useAuth';
 import './CreatePostForm.css';
 import CreatePostModal from '../CreatePostModal/CreatePostModal';
 import { ButtonType } from '../../interfaces/interfaces';
+import { useTranslation } from 'react-i18next';
 
 interface CreatePostFormState {
     text: string;
@@ -48,6 +49,7 @@ const CreatePostForm = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalTitle, setModalTitle] = useState('');
     const { user } = useAuth();
+    const { t } = useTranslation();
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         dispatch({ type: FormActionType.SET_TEXT, payload: e.target.value });
@@ -80,7 +82,7 @@ const CreatePostForm = () => {
                     <input
                         type="text"
                         className="cp-input"
-                        placeholder="What's happening?"
+                        placeholder={t('posts.whatsHappening')}
                         value={text}
                         onChange={handleInputChange}
                         disabled={isSubmitting}
@@ -89,7 +91,7 @@ const CreatePostForm = () => {
 
                 <div className="cp-button-wrapper">
                     <Button
-                        label={isSubmitting ? 'Posting...' : 'Tell everyone'}
+                        label={isSubmitting ? t('posts.posting') : t('posts.tellEveryone')}
                         type={ButtonType.SUBMIT}
                         disabled={isSubmitting}
                     />

@@ -1,4 +1,4 @@
-import { type SyntheticEvent, useReducer } from 'react';
+import { type SyntheticEvent, useReducer, useMemo } from 'react';
 import { useAppDispatch } from '../../redux/hooks';
 import { updateProfileThunk } from '../../redux/AuthSlice';
 import { z } from 'zod';
@@ -14,16 +14,11 @@ import {
 } from '../../interfaces/interfaces';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
+import { useTranslation } from 'react-i18next';
 import UserIcon from '../../assets/User.svg?react';
 import EmailIcon from '../../assets/Email.svg?react';
 import PencilIcon from '../../assets/PencilIcon.svg?react';
 import './ProfileInfo.css';
-
-const profileSchema = z.object({
-    username: z.string().min(3, 'Username must be at least 3 characters'),
-    email: z.string().email('Invalid email format'),
-    description: z.string().max(200, 'Bio cannot exceed 200 characters').optional(),
-});
 
 interface ProfileFormState {
     username: string;
@@ -97,6 +92,17 @@ const ProfileInfo = () => {
     const { user, logout } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const { addToast } = useToast();
+    const { t } = useTranslation();
+
+    const profileSchema = useMemo(
+        () =>
+            z.object({
+                username: z.string().min(3, t('profile.usernameMin')),
+                email: z.string().email(t('profile.emailInvalid')),
+                description: z.string().max(200, t('profile.bioMax')).optional(),
+            }),
+        [t],
+    );
 
     const initialState: ProfileFormState = {
         username: user?.username || '',
@@ -149,7 +155,7 @@ const ProfileInfo = () => {
             });
 
             dispatch({ type: FormActionType.SET_ERRORS, payload: fieldErrors });
-            addToast('Please correct the highlighted errors', ToastType.ERROR);
+            addToast(t('profile.correctErrors'), ToastType.ERROR);
             return;
         }
 
@@ -166,9 +172,9 @@ const ProfileInfo = () => {
             ).unwrap();
 
             dispatch({ type: FormActionType.SUBMIT_SUCCESS });
-            addToast('Profile updated successfully!', ToastType.SUCCESS);
+            addToast(t('profile.profileUpdated'), ToastType.SUCCESS);
         } catch (error) {
-            addToast((error as string) || 'Failed to update profile', ToastType.ERROR);
+            addToast((error as string) || t('profile.failedUpdate'), ToastType.ERROR);
             dispatch({ type: FormActionType.SUBMIT_SUCCESS });
         }
     };
@@ -182,7 +188,7 @@ const ProfileInfo = () => {
     return (
         <div className="profile-info-container">
             <div className="profile-edit-section">
-                <h2 className="section-title">Edit profile</h2>
+                <h2 className="section-title">{t('profile.editProfile')}</h2>
 
                 <div className="profile-photo-section">
                     <img src={photoPreview} alt="avatar" className="profile-photo" />
@@ -193,7 +199,7 @@ const ProfileInfo = () => {
                             onClick={handlePhotoClick}
                             className="change-photo-btn"
                         >
-                            Change profile photo
+                            {t('profile.changePhoto')}
                         </Button>
                     </div>
                 </div>
@@ -201,8 +207,8 @@ const ProfileInfo = () => {
                 <form onSubmit={handleSubmit} className="profile-form">
                     <Input
                         type={InputType.TEXT}
-                        label="Username"
-                        placeholder="@username123"
+                        label={t('profile.username')}
+                        placeholder={t('profile.usernamePlaceholder')}
                         value={formState.username}
                         onChange={(val) =>
                             dispatch({
@@ -219,8 +225,8 @@ const ProfileInfo = () => {
 
                     <Input
                         type={InputType.EMAIL}
-                        label="Email"
-                        placeholder="email@example.com"
+                        label={t('auth.email')}
+                        placeholder={t('auth.emailPlaceholder')}
                         value={formState.email}
                         onChange={(val) =>
                             dispatch({
@@ -238,8 +244,8 @@ const ProfileInfo = () => {
                     <div className="textarea-wrapper">
                         <Input
                             type={InputType.TEXTAREA}
-                            label="Description"
-                            placeholder="Write your bio..."
+                            label={t('posts.description')}
+                            placeholder={t('posts.descriptionPlaceholder')}
                             value={formState.description}
                             onChange={(val) =>
                                 dispatch({
@@ -258,7 +264,11 @@ const ProfileInfo = () => {
 
                     <div className="save-button-container">
                         <Button
-                            label={formState.isSubmitting ? 'Saving...' : 'Save Profile Changes'}
+                            label={
+                                formState.isSubmitting
+                                    ? t('profile.saving')
+                                    : t('profile.saveChanges')
+                            }
                             disabled={formState.isSubmitting}
                             type={ButtonType.SUBMIT}
                         />
@@ -267,7 +277,7 @@ const ProfileInfo = () => {
             </div>
 
             <div className="profile-preferences-section">
-                <h2 className="section-title">Preferences</h2>
+                <h2 className="section-title">{t('profile.preferences')}</h2>
                 <div className="preference-item">
                     <label className="theme-toggle-container">
                         <input
@@ -276,17 +286,23 @@ const ProfileInfo = () => {
                             onChange={toggleTheme}
                             className="theme-toggle-checkbox"
                             data-testid="theme-checkbox"
+                            role="switch"
+                            aria-checked={isDarkTheme}
                         />
                         <span className={`theme-toggle-switch ${isDarkTheme ? 'active' : ''}`}>
                             <span className="theme-toggle-slider"></span>
                         </span>
-                        <span className="theme-toggle-label">Dark theme</span>
+                        <span className="theme-toggle-label">{t('profile.darkTheme')}</span>
                     </label>
                 </div>
 
-                <h2 className="section-title actions-title">Actions</h2>
+                <h2 className="section-title actions-title">{t('profile.actions')}</h2>
                 <div className="logout-button-container">
-                    <Button label="Logout" onClick={logout} data-testid="logout-button" />
+                    <Button
+                        label={t('profile.logout')}
+                        onClick={logout}
+                        data-testid="logout-button"
+                    />
                 </div>
             </div>
         </div>

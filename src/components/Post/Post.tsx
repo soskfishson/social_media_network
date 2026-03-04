@@ -1,4 +1,4 @@
-import { type SyntheticEvent, useReducer, useState, memo } from 'react';
+import { type SyntheticEvent, useReducer, useState, useRef, memo } from 'react';
 import {
     Avatar,
     Box,
@@ -25,6 +25,7 @@ import { useUserQuery } from '../../hooks/useUserQuery';
 import useAuth from '../../hooks/useAuth';
 import useToast from '../../hooks/useToast';
 import useTimeAgo from '../../hooks/useTimeAgo';
+import { useTranslation } from 'react-i18next';
 import CommentItem from '../CommentItem/CommentItem';
 
 const StyledCard = styled(Card)(() => ({
@@ -70,13 +71,16 @@ const ActionButton = styled(Button, {
     padding: 0,
     minWidth: 'auto',
     color: isLiked ? 'var(--negative-main)' : 'var(--text-primary)',
+    transition: 'color 0.2s ease, transform 0.15s ease',
     '&:hover': {
         backgroundColor: 'transparent',
         opacity: 0.8,
+        transform: 'scale(1.05)',
     },
     '& svg': {
         width: '24px',
         height: '24px',
+        transition: 'transform 0.2s cubic-bezier(0.36, 0.07, 0.19, 0.97)',
     },
     [theme.breakpoints.down(720)]: {
         fontSize: '12px',
@@ -119,15 +123,17 @@ interface PostProps {
 export const PostComponent = ({ post }: PostProps) => {
     const [formState, dispatch] = useReducer(commentReducer, { text: '', isSubmitting: false });
     const [commentsShown, setCommentsShown] = useState(false);
+    const [likeAnimating, setLikeAnimating] = useState(false);
+    const [commentAnimating, setCommentAnimating] = useState(false);
+    const likeRef = useRef<HTMLButtonElement>(null);
 
     const { user, isLoggedIn } = useAuth();
     const { addToast } = useToast();
+    const { t } = useTranslation();
     const timeAgo = useTimeAgo(post.creationDate);
 
     const { data: author, isLoading: authorLoading } = useUserQuery(post.authorId);
-
     const { data: comments = [], isLoading: commentsLoading } = useCommentsQuery(post.id);
-
     const { like, dislike } = usePostReactions();
     const addCommentMutation = useAddCommentMutation();
 
@@ -135,30 +141,35 @@ export const PostComponent = ({ post }: PostProps) => {
 
     const handleToggleLike = () => {
         if (!isLoggedIn) {
-            addToast('Login to like posts', ToastType.ERROR);
+            addToast(t('posts.loginToLike'), ToastType.ERROR);
             return;
         }
 
+        setLikeAnimating(true);
+        setTimeout(() => setLikeAnimating(false), 450);
+
         if (isLikedByMe) {
             dislike.mutate(post.id, {
-                onError: () => addToast('Failed to dislike post', ToastType.ERROR),
+                onError: () => addToast(t('posts.failedDislike'), ToastType.ERROR),
             });
         } else {
             like.mutate(post.id, {
-                onError: () => addToast('Failed to like post', ToastType.ERROR),
+                onError: () => addToast(t('posts.failedLike'), ToastType.ERROR),
             });
         }
     };
 
     const handleToggleComments = () => {
+        if (!commentsShown) {
+            setCommentAnimating(true);
+            setTimeout(() => setCommentAnimating(false), 350);
+        }
         setCommentsShown(!commentsShown);
     };
 
     const handleCommentSubmit = async (e: SyntheticEvent) => {
         e.preventDefault();
-        if (!formState.text.trim()) {
-            return;
-        }
+        if (!formState.text.trim()) return;
 
         dispatch({ type: FormActionType.SUBMIT_START });
         addCommentMutation.mutate(
@@ -166,15 +177,18 @@ export const PostComponent = ({ post }: PostProps) => {
             {
                 onSuccess: () => {
                     dispatch({ type: FormActionType.SUBMIT_SUCCESS });
-                    addToast('Comment published!', ToastType.SUCCESS);
+                    addToast(t('posts.commentPublished'), ToastType.SUCCESS);
                 },
                 onError: () => {
                     dispatch({ type: FormActionType.SUBMIT_SUCCESS });
-                    addToast('Failed to post comment', ToastType.ERROR);
+                    addToast(t('posts.failedComment'), ToastType.ERROR);
                 },
             },
         );
     };
+
+    const authorName = author?.firstName || `User ${post.authorId}`;
+    const likeLabel = isLikedByMe ? t('a11y.unlikePost') : t('a11y.likePost');
 
     return (
         <StyledCard>
@@ -185,13 +199,19 @@ export const PostComponent = ({ post }: PostProps) => {
                     <Avatar
                         src={author?.profileImage || '/assets/default-avatar.png'}
                         sx={{ width: 48, height: 48 }}
+                        alt={t('a11y.userAvatar', { name: authorName })}
                     />
                 )}
                 <Stack>
-                    <Typography sx={{ fontSize: '1rem', fontWeight: 500 }}>
-                        {author?.firstName || `User ${post.authorId}`}
+                    <Typography sx={{ fontSize: '1rem', fontWeight: 500 }} component="h3">
+                        {authorName}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        component="time"
+                        dateTime={post.creationDate}
+                    >
                         {timeAgo}
                     </Typography>
                 </Stack>
@@ -202,7 +222,7 @@ export const PostComponent = ({ post }: PostProps) => {
                     <CardMedia
                         component="img"
                         image={post.image}
-                        alt="Post"
+                        alt={t('a11y.postImage')}
                         sx={{ width: '100%', height: 'auto', borderRadius: '4px' }}
                     />
                 )}
@@ -212,35 +232,72 @@ export const PostComponent = ({ post }: PostProps) => {
                 </PostCaption>
             </Box>
 
-            <CardActions sx={{ padding: 0, gap: '16px' }}>
+            <CardActions sx={{ padding: 0, gap: '16px' }} role="group">
                 <ActionButton
+                    ref={likeRef}
                     onClick={handleToggleLike}
                     isLiked={isLikedByMe}
                     disabled={like.isPending || dislike.isPending}
                     data-testid="like-button"
+                    aria-label={likeLabel}
+                    aria-pressed={isLikedByMe}
+                    className={likeAnimating ? (isLikedByMe ? 'like-btn-liked' : '') : ''}
+                    sx={{
+                        '& svg': likeAnimating
+                            ? {
+                                  animation: isLikedByMe
+                                      ? 'none'
+                                      : 'heartPop 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97)',
+                              }
+                            : {},
+                    }}
                 >
-                    {isLikedByMe ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                    <span>{post.likesCount} likes</span>
+                    {isLikedByMe ? (
+                        <FavoriteIcon
+                            sx={{
+                                color: 'var(--negative-main)',
+                                animation: likeAnimating
+                                    ? 'heartPop 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97)'
+                                    : 'none',
+                            }}
+                        />
+                    ) : (
+                        <FavoriteBorderIcon />
+                    )}
+                    <span>{t('posts.likes', { count: post.likesCount })}</span>
                 </ActionButton>
 
                 <ActionButton
                     onClick={handleToggleComments}
                     disabled={!isLoggedIn}
                     data-testid="comment-toggle"
+                    aria-label={t('a11y.toggleComments')}
+                    className={commentAnimating ? 'comment-btn-active' : ''}
                 >
                     <CommentIcon />
-                    <span>{isLoggedIn ? `${comments.length} comments` : 'Login to view'}</span>
+                    <span>
+                        {isLoggedIn
+                            ? t('posts.comments', { count: comments.length })
+                            : t('posts.loginToView')}
+                    </span>
                 </ActionButton>
 
                 {isLoggedIn && (
-                    <ActionButton onClick={handleToggleComments}>
+                    <ActionButton
+                        onClick={handleToggleComments}
+                        aria-label={commentsShown ? 'Collapse comments' : 'Expand comments'}
+                    >
                         {commentsShown ? <ExpandMoreIcon /> : <ExpandLessIcon />}
                     </ActionButton>
                 )}
             </CardActions>
 
-            <Collapse in={commentsShown && isLoggedIn}>
-                <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Collapse in={commentsShown && isLoggedIn} id={`comments-${post.id}`}>
+                <Box
+                    sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: '16px' }}
+                    role="region"
+                    aria-label="Comments"
+                >
                     {commentsLoading ? (
                         <CircularProgress size={20} />
                     ) : (
@@ -254,11 +311,12 @@ export const PostComponent = ({ post }: PostProps) => {
                                 component="form"
                                 onSubmit={handleCommentSubmit}
                                 sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
+                                aria-label="Add a comment"
                             >
                                 <TextField
                                     multiline
                                     rows={3}
-                                    placeholder="Write description here..."
+                                    placeholder={t('posts.writeComment')}
                                     value={formState.text}
                                     onChange={(e) =>
                                         dispatch({
@@ -269,16 +327,31 @@ export const PostComponent = ({ post }: PostProps) => {
                                     disabled={formState.isSubmitting}
                                     fullWidth
                                     data-testid="comment-input"
+                                    inputProps={{
+                                        'aria-label': 'Write your comment',
+                                        maxLength: 1000,
+                                    }}
                                 />
                                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                                     <Button
                                         type="submit"
                                         variant="contained"
                                         disabled={formState.isSubmitting || !formState.text.trim()}
-                                        sx={{ textTransform: 'none' }}
+                                        sx={{
+                                            textTransform: 'none',
+                                            transition: 'transform 0.15s ease',
+                                            '&:not(:disabled):hover': {
+                                                transform: 'translateY(-1px)',
+                                            },
+                                            '&:not(:disabled):active': {
+                                                transform: 'translateY(0)',
+                                            },
+                                        }}
                                         data-testid="comment-submit"
                                     >
-                                        {formState.isSubmitting ? 'Posting...' : 'Post Comment'}
+                                        {formState.isSubmitting
+                                            ? `${t('posts.postComment')}...`
+                                            : t('posts.postComment')}
                                     </Button>
                                 </Box>
                             </Box>

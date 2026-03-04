@@ -5,10 +5,13 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
+import { I18nextProvider, initReactI18next } from 'react-i18next';
+import i18n from 'i18next';
 import authReducer from '../redux/AuthSlice';
 import AuthContext from '../context/AuthContext/AuthContext';
 import ThemeContext from '../context/ThemeContext/ThemeContext';
 import ToastContext from '../context/ToastContext/ToastContext';
+import en from '../i18n/locales/en';
 import {
     ThemeTypes,
     type AuthContextType,
@@ -21,6 +24,14 @@ import { type RootState } from '../redux/store';
 import { type EnhancedStore } from '@reduxjs/toolkit';
 
 type AppStore = EnhancedStore<{ auth: ReturnType<typeof authReducer> }>;
+
+const testI18n = i18n.createInstance();
+testI18n.use(initReactI18next).init({
+    lng: 'en',
+    fallbackLng: 'en',
+    resources: { en: { translation: en } },
+    interpolation: { escapeValue: false },
+});
 
 const createTestQueryClient = () =>
     new QueryClient({
@@ -90,15 +101,17 @@ function renderWithProviders(
         return (
             <Provider store={store}>
                 <QueryClientProvider client={queryClient}>
-                    <AuthContext.Provider value={finalAuthValue}>
-                        <ToastContext.Provider value={finalToastValue}>
-                            <ThemeContext.Provider value={finalThemeValue}>
-                                <MemoryRouter initialEntries={initialEntries}>
-                                    {children}
-                                </MemoryRouter>
-                            </ThemeContext.Provider>
-                        </ToastContext.Provider>
-                    </AuthContext.Provider>
+                    <I18nextProvider i18n={testI18n}>
+                        <AuthContext.Provider value={finalAuthValue}>
+                            <ToastContext.Provider value={finalToastValue}>
+                                <ThemeContext.Provider value={finalThemeValue}>
+                                    <MemoryRouter initialEntries={initialEntries}>
+                                        {children}
+                                    </MemoryRouter>
+                                </ThemeContext.Provider>
+                            </ToastContext.Provider>
+                        </AuthContext.Provider>
+                    </I18nextProvider>
                 </QueryClientProvider>
             </Provider>
         );
@@ -111,4 +124,4 @@ function renderWithProviders(
 }
 
 export * from '@testing-library/react';
-export { renderWithProviders };
+export { renderWithProviders, testI18n };
