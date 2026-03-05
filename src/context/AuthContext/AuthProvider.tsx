@@ -1,4 +1,5 @@
 import { type ReactNode, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     type AuthContextType,
     type LoginPayload,
@@ -23,18 +24,17 @@ interface AuthProviderProps {
 const AuthProvider = ({ children }: AuthProviderProps) => {
     const dispatch = useAppDispatch();
     const { addToast } = useToast();
+    const { t } = useTranslation();
 
     const { user, accessToken, isLoading } = useAppSelector((state) => state.auth);
-
     const wasLoggedIn = useRef<boolean>(!!accessToken);
 
     useEffect(() => {
         if (wasLoggedIn.current && !accessToken) {
-            addToast('Session expired. Please log in again.', ToastType.WARNING);
+            addToast(t('toast.sessionExpired'), ToastType.WARNING);
         }
-
         wasLoggedIn.current = !!accessToken;
-    }, [accessToken, addToast]);
+    }, [accessToken, addToast, t]);
 
     useEffect(() => {
         if (accessToken && !user) {
@@ -45,7 +45,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const login = async (payload: LoginPayload) => {
         const resultAction = await dispatch(loginThunk(payload));
         if (loginThunk.fulfilled.match(resultAction)) {
-            addToast('Welcome back!', ToastType.SUCCESS);
+            addToast(t('toast.welcomeBack'), ToastType.SUCCESS);
         } else {
             throw new Error(resultAction.payload as string);
         }
@@ -54,7 +54,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const register = async (payload: RegisterPayload) => {
         const resultAction = await dispatch(registerThunk(payload));
         if (registerThunk.fulfilled.match(resultAction)) {
-            addToast('Account created successfully!', ToastType.SUCCESS);
+            addToast(t('toast.accountCreated'), ToastType.SUCCESS);
         } else {
             throw new Error(resultAction.payload as string);
         }
@@ -62,7 +62,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const logout = async () => {
         dispatch(logoutAction());
-        addToast('You are logged out!', ToastType.WARNING);
+        addToast(t('toast.loggedOut'), ToastType.WARNING);
     };
 
     const value: AuthContextType = {
@@ -77,7 +77,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     return (
         <AuthContext.Provider value={value}>
-            {isLoading && <Loader fullPage message="Please wait..." />}
+            {isLoading && <Loader fullPage message={t('common.loading')} />}
             {children}
         </AuthContext.Provider>
     );

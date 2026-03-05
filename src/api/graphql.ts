@@ -10,6 +10,7 @@ export async function fetchPostsGraphQL() {
                 content
                 image
                 creationDate
+                likesCount
                 likedByUsers {
                     id
                 }

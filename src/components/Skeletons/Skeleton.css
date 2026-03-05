@@ -19,12 +19,6 @@
     animation: skeleton-shimmer 1.2s infinite;
 }
 
-@keyframes skeleton-shimmer {
-    100% {
-        transform: translateX(100%);
-    }
-}
-
 .skeleton-line {
     height: 12px;
     border-radius: 6px;

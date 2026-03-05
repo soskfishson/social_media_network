@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import SidebarItem, { type LinkableItem } from '../SidebarItem/SidebarItem';
 import SidebarItemSkeleton from '../Skeletons/SidebarItemSkeleton';
 import './Sidebar.css';
@@ -12,6 +13,7 @@ interface SidebarState {
 }
 
 const Sidebar = () => {
+    const { t } = useTranslation();
     const [sidebarData, setSidebarData] = useState<SidebarState>({
         suggestedUsers: [],
         groups: [],
@@ -79,13 +81,16 @@ const Sidebar = () => {
         <aside className="sidebar">
             {sidebarData.isLoading ? (
                 <>
-                    <SidebarItemSkeleton title="Suggested people" count={5} />
-                    <SidebarItemSkeleton title="Communities you might like" count={4} />
+                    <SidebarItemSkeleton title={t('sidebar.suggestedPeople')} count={5} />
+                    <SidebarItemSkeleton title={t('sidebar.communities')} count={4} />
                 </>
             ) : (
                 <>
-                    <SidebarItem title="Suggested people" items={sidebarData.suggestedUsers} />
-                    <SidebarItem title="Communities you might like" items={sidebarData.groups} />
+                    <SidebarItem
+                        title={t('sidebar.suggestedPeople')}
+                        items={sidebarData.suggestedUsers}
+                    />
+                    <SidebarItem title={t('sidebar.communities')} items={sidebarData.groups} />
                 </>
             )}
         </aside>

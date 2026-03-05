@@ -11,6 +11,8 @@ import { setupInterceptors } from './api/api';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import './styles/colors.css';
 import './styles/index.css';
+import './styles/Animations.css';
+import './i18n/i18n';
 
 const queryClient = new QueryClient({
     defaultOptions: {

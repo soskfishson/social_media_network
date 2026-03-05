@@ -4,6 +4,7 @@ import { ButtonType, InputType, ToastType } from '../../interfaces/interfaces';
 import { useCreatePostMutation, uploadImage } from '../../hooks/usePostsQuery';
 import useToast from '../../hooks/useToast';
 import Button from '../Button/Button';
+import { useTranslation } from 'react-i18next';
 import EmailIcon from '../../assets/Email.svg?react';
 import PencilIcon from '../../assets/PencilIcon.svg?react';
 import './CreatePostModal.css';
@@ -68,12 +69,13 @@ const CreatePostModal = ({ title: initialTitle, isOpen, onClose }: CreatePostMod
     });
     const { addToast } = useToast();
     const createPostMutation = useCreatePostMutation();
+    const { t } = useTranslation();
 
     const handleSubmit = async (e: SyntheticEvent) => {
         e.preventDefault();
 
         if (!formState.title.trim() || !formState.description.trim()) {
-            addToast('Please fill in all required fields', ToastType.ERROR);
+            addToast(t('posts.fillRequired'), ToastType.ERROR);
             return;
         }
 
@@ -92,11 +94,11 @@ const CreatePostModal = ({ title: initialTitle, isOpen, onClose }: CreatePostMod
             });
 
             dispatch({ type: FormActionType.RESET });
-            addToast('Post created successfully!', ToastType.SUCCESS);
+            addToast(t('posts.postCreated'), ToastType.SUCCESS);
             onClose();
         } catch (error) {
             addToast(
-                error instanceof Error ? error.message : 'Failed to create post',
+                error instanceof Error ? error.message : t('posts.failedCreate'),
                 ToastType.ERROR,
             );
         } finally {
@@ -114,15 +116,22 @@ const CreatePostModal = ({ title: initialTitle, isOpen, onClose }: CreatePostMod
     }
 
     return (
-        <div className="modal-container" onClick={onClose}>
+        <div className="modal-container modal-overlay-enter" onClick={onClose}>
             <dialog
                 open={isOpen}
-                className="create-post-modal"
+                className="create-post-modal modal-content-enter"
                 onClick={(e) => e.stopPropagation()}
+                aria-labelledby="modal-title"
+                aria-modal="true"
             >
                 <header className="modal-header">
-                    <h2>Create a new post</h2>
-                    <Button type={ButtonType.CLOSE} onClick={handleClose} className="close-button">
+                    <h2 id="modal-title">{t('posts.createPost')}</h2>
+                    <Button
+                        type={ButtonType.CLOSE}
+                        onClick={handleClose}
+                        className="close-button"
+                        aria-label={t('a11y.closeModal')}
+                    >
                         ×
                     </Button>
                 </header>
@@ -132,8 +141,8 @@ const CreatePostModal = ({ title: initialTitle, isOpen, onClose }: CreatePostMod
                         <Input
                             type={InputType.TEXT}
                             icon={<EmailIcon />}
-                            label="Post Title"
-                            placeholder="Enter post title"
+                            label={t('posts.postTitle')}
+                            placeholder={t('posts.postTitlePlaceholder')}
                             value={formState.title}
                             onChange={(value) =>
                                 dispatch({ type: FormActionType.SET_TITLE, payload: value })
@@ -146,8 +155,8 @@ const CreatePostModal = ({ title: initialTitle, isOpen, onClose }: CreatePostMod
                         <Input
                             type={InputType.TEXTAREA}
                             icon={<PencilIcon />}
-                            label="Description"
-                            placeholder="Write description here..."
+                            label={t('posts.description')}
+                            placeholder={t('posts.descriptionPlaceholder')}
                             value={formState.description}
                             onChange={(value) =>
                                 dispatch({
@@ -162,7 +171,7 @@ const CreatePostModal = ({ title: initialTitle, isOpen, onClose }: CreatePostMod
                     <Input
                         type={InputType.FILE}
                         label=""
-                        placeholder="Select a file or drag and drop here"
+                        placeholder={t('posts.selectFile')}
                         value=""
                         backgroundColor="var(--bg-app)"
                         onChange={() => {}}
@@ -178,7 +187,7 @@ const CreatePostModal = ({ title: initialTitle, isOpen, onClose }: CreatePostMod
 
                     <div className="button-wrapper">
                         <Button
-                            label={formState.isSubmitting ? 'Creating...' : 'Create'}
+                            label={formState.isSubmitting ? t('posts.creating') : t('posts.create')}
                             disabled={formState.isSubmitting}
                         />
                     </div>

@@ -23,10 +23,12 @@ const TabSwitch = ({ tabs, defaultTab, onTabChange }: TabSwitchProps) => {
     };
 
     return (
-        <div className="tab-switch">
+        <div className="tab-switch" role="tablist">
             {tabs.map((tab) => (
                 <Button
                     key={tab.id}
+                    role="tab"
+                    aria-selected={activeTab === tab.id}
                     className={`tab-switch-button ${activeTab === tab.id ? 'active' : ''}`}
                     onClick={() => handleTabClick(tab.id)}
                     type={ButtonType.BUTTON}

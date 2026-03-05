@@ -3,6 +3,7 @@ import Footer from '../../components/Footer/Footer';
 import { ErrorType } from '../../interfaces/interfaces';
 import Error from '../../assets/Error.svg?react';
 import NotFound from '../../assets/Error404.svg?react';
+import { useTranslation } from 'react-i18next';
 import './ErrorPage.css';
 
 interface ErrorPageProps {
@@ -10,6 +11,8 @@ interface ErrorPageProps {
 }
 
 const ErrorPage = ({ error }: ErrorPageProps) => {
+    const { t } = useTranslation();
+
     const renderError = () => {
         switch (error) {
             case ErrorType.GENERIC:
@@ -17,7 +20,7 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
                     <>
                         <Error />
                         <p className="error-message" data-testid="error-message">
-                            Oops... Something bad has just happened
+                            {t('errors.generic')}
                         </p>
                     </>
                 );
@@ -26,14 +29,14 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
                     <>
                         <NotFound />
                         <p className="error-message" data-testid="error-message">
-                            Page not found
+                            {t('errors.notFound')}
                         </p>
                     </>
                 );
         }
     };
     return (
-        <div className="error-page">
+        <div className="error-page  page-transition-wrapper">
             <Header variant="simple" />
             <main className="error-page-container">{renderError()}</main>
             <Footer />
