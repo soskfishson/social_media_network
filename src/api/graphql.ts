@@ -26,5 +26,10 @@ export async function fetchPostsGraphQL() {
     });
 
     const result = await response.json();
-    return result.data.allPosts;
+
+    if (result && result.data && Array.isArray(result.data.allPosts)) {
+        return result.data.allPosts;
+    }
+
+    return [];
 }

@@ -9,7 +9,7 @@ const SidebarItemSkeleton = ({ count = 5 }: SidebarItemSkeletonProps) => {
     const items = Array.from({ length: count });
 
     return (
-        <section className="sidebar-skeleton-section">
+        <section className="sidebar-skeleton-section" data-testid="sidebar-skeleton">
             <div className="skeleton sidebar-skeleton-title" />
             <ul className="sidebar-skeleton-list">
                 {items.map((_, idx) => (

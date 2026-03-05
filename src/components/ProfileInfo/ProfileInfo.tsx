@@ -1,19 +1,19 @@
 import { type SyntheticEvent, useReducer } from 'react';
 import { useAppDispatch } from '../../redux/hooks';
-import { updateProfileThunk } from '../../redux/AuthSlice.ts';
+import { updateProfileThunk } from '../../redux/AuthSlice';
 import { z } from 'zod';
-import useAuth from '../../hooks/useAuth.ts';
-import useTheme from '../../hooks/useTheme.ts';
-import useToast from '../../hooks/useToast.ts';
+import useAuth from '../../hooks/useAuth';
+import useTheme from '../../hooks/useTheme';
+import useToast from '../../hooks/useToast';
 import {
     ButtonType,
     InputType,
     ThemeTypes,
     ToastType,
     ValidationState,
-} from '../../interfaces/interfaces.ts';
-import Button from '../Button/Button.tsx';
-import Input from '../Input/Input.tsx';
+} from '../../interfaces/interfaces';
+import Button from '../Button/Button';
+import Input from '../Input/Input';
 import UserIcon from '../../assets/User.svg?react';
 import EmailIcon from '../../assets/Email.svg?react';
 import PencilIcon from '../../assets/PencilIcon.svg?react';
@@ -275,6 +275,7 @@ const ProfileInfo = () => {
                             checked={isDarkTheme}
                             onChange={toggleTheme}
                             className="theme-toggle-checkbox"
+                            data-testid="theme-checkbox"
                         />
                         <span className={`theme-toggle-switch ${isDarkTheme ? 'active' : ''}`}>
                             <span className="theme-toggle-slider"></span>
@@ -285,7 +286,7 @@ const ProfileInfo = () => {
 
                 <h2 className="section-title actions-title">Actions</h2>
                 <div className="logout-button-container">
-                    <Button label="Logout" onClick={logout} />
+                    <Button label="Logout" onClick={logout} data-testid="logout-button" />
                 </div>
             </div>
         </div>

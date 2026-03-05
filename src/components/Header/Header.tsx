@@ -1,10 +1,10 @@
 import Logo from '../../assets/logo.svg?react';
 import LogoLight from '../../assets/logoLight.svg?react';
 import BurgerMenu from '../BurgerMenu/BurgerMenu';
-import useAuth from '../../hooks/useAuth.ts';
-import useTheme from '../../hooks/useTheme.ts';
+import useAuth from '../../hooks/useAuth';
+import useTheme from '../../hooks/useTheme';
 import './header.css';
-import { ThemeTypes } from '../../interfaces/interfaces.ts';
+import { ThemeTypes } from '../../interfaces/interfaces';
 import { Link } from 'react-router-dom';
 
 interface HeaderProps {
@@ -14,7 +14,6 @@ interface HeaderProps {
 const Header = ({ variant = 'default' }: HeaderProps) => {
     const { isLoggedIn, user } = useAuth();
     const { theme } = useTheme();
-    console.log(user);
     const renderRightSide = () => {
         if (variant === 'simple') {
             return null;
@@ -35,10 +34,10 @@ const Header = ({ variant = 'default' }: HeaderProps) => {
         } else {
             return (
                 <div className="header-right-side">
-                    <Link to="/signup" className="header-link">
+                    <Link to="/signup" className="header-link" data-testid="signup-link">
                         Sign Up
                     </Link>
-                    <Link to="/signin" className="header-link">
+                    <Link to="/signin" className="header-link" data-testid="signin-link">
                         Sign In
                     </Link>
                 </div>

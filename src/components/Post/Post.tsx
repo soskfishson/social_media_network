@@ -21,7 +21,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { type Post as PostType, ToastType } from '../../interfaces/interfaces';
 import { useAddCommentMutation, useCommentsQuery } from '../../hooks/useCommentsQuery';
 import { usePostReactions } from '../../hooks/useLikeMutation';
-import { useUserQuery } from '../../hooks/useUserQuery.ts';
+import { useUserQuery } from '../../hooks/useUserQuery';
 import useAuth from '../../hooks/useAuth';
 import useToast from '../../hooks/useToast';
 import useTimeAgo from '../../hooks/useTimeAgo';
@@ -217,12 +217,17 @@ export const PostComponent = ({ post }: PostProps) => {
                     onClick={handleToggleLike}
                     isLiked={isLikedByMe}
                     disabled={like.isPending || dislike.isPending}
+                    data-testid="like-button"
                 >
                     {isLikedByMe ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                     <span>{post.likedByUsers.length} likes</span>
                 </ActionButton>
 
-                <ActionButton onClick={handleToggleComments} disabled={!isLoggedIn}>
+                <ActionButton
+                    onClick={handleToggleComments}
+                    disabled={!isLoggedIn}
+                    data-testid="comment-toggle"
+                >
                     <CommentIcon />
                     <span>{isLoggedIn ? `${comments.length} comments` : 'Login to view'}</span>
                 </ActionButton>
@@ -240,9 +245,10 @@ export const PostComponent = ({ post }: PostProps) => {
                         <CircularProgress size={20} />
                     ) : (
                         <Stack spacing={2}>
-                            {comments.map((comment) => (
-                                <CommentItem key={comment.id} comment={comment} />
-                            ))}
+                            {Array.isArray(comments) &&
+                                comments.map((comment) => (
+                                    <CommentItem key={comment.id} comment={comment} />
+                                ))}
 
                             <Box
                                 component="form"
@@ -262,6 +268,7 @@ export const PostComponent = ({ post }: PostProps) => {
                                     }
                                     disabled={formState.isSubmitting}
                                     fullWidth
+                                    data-testid="comment-input"
                                 />
                                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                                     <Button
@@ -269,6 +276,7 @@ export const PostComponent = ({ post }: PostProps) => {
                                         variant="contained"
                                         disabled={formState.isSubmitting || !formState.text.trim()}
                                         sx={{ textTransform: 'none' }}
+                                        data-testid="comment-submit"
                                     >
                                         {formState.isSubmitting ? 'Posting...' : 'Post Comment'}
                                     </Button>

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { User } from '../interfaces/interfaces.ts';
+import type { User } from '../interfaces/interfaces';
 
 const BASE_URL = '';
 

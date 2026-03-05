@@ -4,9 +4,9 @@ import {
     type LoginPayload,
     type RegisterPayload,
     ToastType,
-} from '../../interfaces/interfaces.ts';
+} from '../../interfaces/interfaces';
 import AuthContext from './AuthContext';
-import useToast from '../../hooks/useToast.ts';
+import useToast from '../../hooks/useToast';
 import {
     loginThunk,
     registerThunk,

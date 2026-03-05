@@ -1,9 +1,9 @@
 import { type SyntheticEvent, useReducer } from 'react';
-import Input from '../Input/Input.tsx';
-import { ButtonType, InputType, ToastType } from '../../interfaces/interfaces.ts';
+import Input from '../Input/Input';
+import { ButtonType, InputType, ToastType } from '../../interfaces/interfaces';
 import { useCreatePostMutation, uploadImage } from '../../hooks/usePostsQuery';
-import useToast from '../../hooks/useToast.ts';
-import Button from '../Button/Button.tsx';
+import useToast from '../../hooks/useToast';
+import Button from '../Button/Button';
 import EmailIcon from '../../assets/Email.svg?react';
 import PencilIcon from '../../assets/PencilIcon.svg?react';
 import './CreatePostModal.css';

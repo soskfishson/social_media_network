@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import Header from '../../components/Header/Header.tsx';
-import Footer from '../../components/Footer/Footer.tsx';
-import TabSwitch from '../../components/TabSwitch/TabSwitch.tsx';
+import Header from '../../components/Header/Header';
+import Footer from '../../components/Footer/Footer';
+import TabSwitch from '../../components/TabSwitch/TabSwitch';
 import './ProfilePage.css';
-import ProfileInfo from '../../components/ProfileInfo/ProfileInfo.tsx';
+import ProfileInfo from '../../components/ProfileInfo/ProfileInfo';
 
 const ProfilePage = () => {
     const [currentTab, setCurrentTab] = useState('profile');

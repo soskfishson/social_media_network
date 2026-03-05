@@ -1,73 +1,62 @@
-# React + TypeScript + Vite
+# Internship Sidekick — Module 5
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React + TypeScript single-page application built with Vite. Features authentication, a social post feed, user profiles, theming, and a GraphQL-backed API layer.
 
-Currently, two official plugins are available:
+## Coverage
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![Statements](./coverage/badges/badge-statements.svg)
+![Branches](./coverage/badges/badge-branches.svg)
+![Functions](./coverage/badges/badge-functions.svg)
+![Lines](./coverage/badges/badge-lines.svg)
 
-## React Compiler
+### Start the dev server
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm run dev
+```
+## Testing
 
-## Expanding the ESLint configuration
+### Unit tests (Jest)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# Run all tests
+npm test
 
-```js
-export default defineConfig([
-    globalIgnores(['dist']),
-    {
-        files: ['**/*.{ts,tsx}'],
-        extends: [
-            // Other configs...
+# Run with coverage report
+npm run test:coverage
 
-            // Remove tseslint.configs.recommended and replace with this
-            tseslint.configs.recommendedTypeChecked,
-            // Alternatively, use this for stricter rules
-            tseslint.configs.strictTypeChecked,
-            // Optionally, add this for stylistic rules
-            tseslint.configs.stylisticTypeChecked,
-
-            // Other configs...
-        ],
-        languageOptions: {
-            parserOptions: {
-                project: ['./tsconfig.node.json', './tsconfig.app.json'],
-                tsconfigRootDir: import.meta.dirname,
-            },
-            // other options...
-        },
-    },
-]);
+# Regenerate coverage badge SVGs
+npm run coverage:badges
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Coverage reports are output to `./coverage/`. The HTML report can be opened at `./coverage/lcov-report/index.html`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+### End-to-end tests (Cypress)
 
-export default defineConfig([
-    globalIgnores(['dist']),
-    {
-        files: ['**/*.{ts,tsx}'],
-        extends: [
-            // Other configs...
-            // Enable lint rules for React
-            reactX.configs['recommended-typescript'],
-            // Enable lint rules for React DOM
-            reactDom.configs.recommended,
-        ],
-        languageOptions: {
-            parserOptions: {
-                project: ['./tsconfig.node.json', './tsconfig.app.json'],
-                tsconfigRootDir: import.meta.dirname,
-            },
-            // other options...
-        },
-    },
-]);
+```bash
+# Open Cypress UI
+npm run cy:open
+
+# Run headless
+npm run cy:run
+
+# Run headed
+npm run cy:run:headed
+```
+
+## Project Structure
+
+```
+cypress/          #Cypress e2e tests
+coverage/         #Up to date coverage results
+src/
+├── api/          # Axios and GraphQL clients
+├── components/   # Reusable UI components
+├── context/      # Auth, Theme, and Toast contexts
+├── hooks/        # Custom React hooks
+├── interfaces/   # Shared TypeScript types
+├── pages/        # Route-level page components
+├── redux/        # Redux store and slices
+├── tests/        # Jest unit tests and mocks
+└── utils/        # Utility functions and ProtectedRoute
 ```

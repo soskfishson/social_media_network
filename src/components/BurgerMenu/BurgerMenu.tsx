@@ -2,8 +2,8 @@ import { useState } from 'react';
 import Logo from '../../assets/logo.svg?react';
 import useAuth from '../../hooks/useAuth';
 import './BurgerMenu.css';
-import Button from '../Button/Button.tsx';
-import { ButtonType } from '../../interfaces/interfaces.ts';
+import Button from '../Button/Button';
+import { ButtonType } from '../../interfaces/interfaces';
 import { Link } from 'react-router-dom';
 
 const BurgerMenu = () => {
@@ -27,6 +27,7 @@ const BurgerMenu = () => {
                 className={`burger-button ${isOpen ? 'open' : ''}`}
                 onClick={toggleMenu}
                 type={ButtonType.BUTTON}
+                data-testid="burger-button"
             >
                 <span></span>
                 <span></span>
@@ -35,7 +36,7 @@ const BurgerMenu = () => {
 
             {isOpen && <div className="burger-overlay" onClick={closeMenu} />}
 
-            <nav className={`burger-menu ${isOpen ? 'open' : ''}`}>
+            <nav className={`burger-menu ${isOpen ? 'open' : ''}`} data-testid="burger-nav">
                 {isLoggedIn && user ? (
                     <>
                         <div className="burger-menu-profile">
@@ -58,10 +59,14 @@ const BurgerMenu = () => {
                 ) : (
                     <ul className="burger-menu-list">
                         <li>
-                            <Link to="/signup">Sign up</Link>
+                            <Link to="/signup" data-testid="burger-signup-link">
+                                Sign up
+                            </Link>
                         </li>
                         <li>
-                            <Link to="/signin">Sign in</Link>
+                            <Link to="/signin" data-testid="burger-signin-link">
+                                Sign in
+                            </Link>
                         </li>
                     </ul>
                 )}

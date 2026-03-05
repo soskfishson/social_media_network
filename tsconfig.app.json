@@ -5,8 +5,10 @@
         "useDefineForClassFields": true,
         "lib": ["ES2022", "DOM", "DOM.Iterable"],
         "module": "ESNext",
-        "types": ["vite/client", "vite-plugin-svgr/client"],
+        "types": ["vite/client", "vite-plugin-svgr/client", "jest", "node", "@testing-library/jest-dom"],
         "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
 
         /* Bundler mode */
         "moduleResolution": "bundler",

@@ -1,6 +1,6 @@
-import Header from '../../components/Header/Header.tsx';
+import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
-import { ErrorType } from '../../interfaces/interfaces.ts';
+import { ErrorType } from '../../interfaces/interfaces';
 import Error from '../../assets/Error.svg?react';
 import NotFound from '../../assets/Error404.svg?react';
 import './ErrorPage.css';
@@ -16,14 +16,18 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
                 return (
                     <>
                         <Error />
-                        <p className="error-message">Oops... Something bad has just happened</p>
+                        <p className="error-message" data-testid="error-message">
+                            Oops... Something bad has just happened
+                        </p>
                     </>
                 );
             case ErrorType.NOT_FOUND:
                 return (
                     <>
                         <NotFound />
-                        <p className="error-message">Page not found</p>
+                        <p className="error-message" data-testid="error-message">
+                            Page not found
+                        </p>
                     </>
                 );
         }

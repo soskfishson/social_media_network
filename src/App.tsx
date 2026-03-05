@@ -3,15 +3,15 @@ import { Route, Routes, useLocation } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import nprogress from 'nprogress';
 import 'nprogress/nprogress.css';
-import ProtectedRoute from './utils/ProtectedRoute.tsx';
-import { ErrorType } from './interfaces/interfaces.ts';
-import Loader from './components/Loader/Loader.tsx';
+import ProtectedRoute from './utils/ProtectedRoute';
+import { ErrorType } from './interfaces/interfaces';
+import Loader from './components/Loader/Loader';
 
-const MainPage = lazy(() => import('./pages/MainPage/MainPage.tsx'));
-const ProfilePage = lazy(() => import('./pages/ProfilePage/ProfilePage.tsx'));
-const SignInPage = lazy(() => import('./pages/SignInPage/SignInPage.tsx'));
-const SignUpPage = lazy(() => import('./pages/SignUpPage/SignUpPage.tsx'));
-const ErrorPage = lazy(() => import('./pages/ErrorPage/ErrorPage.tsx'));
+const MainPage = lazy(() => import('./pages/MainPage/MainPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage/ProfilePage'));
+const SignInPage = lazy(() => import('./pages/SignInPage/SignInPage'));
+const SignUpPage = lazy(() => import('./pages/SignUpPage/SignUpPage'));
+const ErrorPage = lazy(() => import('./pages/ErrorPage/ErrorPage'));
 
 const NavigationProgress = () => {
     const location = useLocation();
