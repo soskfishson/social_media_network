@@ -220,7 +220,7 @@ export const PostComponent = ({ post }: PostProps) => {
                     data-testid="like-button"
                 >
                     {isLikedByMe ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                    <span>{post.likedByUsers.length} likes</span>
+                    <span>{post.likesCount} likes</span>
                 </ActionButton>
 
                 <ActionButton
