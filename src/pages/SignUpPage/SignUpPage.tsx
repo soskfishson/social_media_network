@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
@@ -8,18 +9,9 @@ import EmailIcon from '../../assets/Email.svg?react';
 import PasswordIcon from '../../assets/Eye.svg?react';
 import useToast from '../../hooks/useToast';
 import useAuth from '../../hooks/useAuth';
-
+import { useTranslation } from 'react-i18next';
 import { ButtonType, InputType, ToastType, ValidationState } from '../../interfaces/interfaces';
 import './SignUpPage.css';
-
-const validationSchema = Yup.object({
-    email: Yup.string()
-        .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Email is not valid')
-        .required('Please fill in all fields'),
-    password: Yup.string()
-        .min(8, 'Password must be at least 8 characters')
-        .required('Please fill in all fields'),
-});
 
 const getValidationState = (
     value: string,
@@ -43,6 +35,20 @@ const SignUpPage = () => {
     const { addToast } = useToast();
     const { register } = useAuth();
     const navigate = useNavigate();
+    const { t } = useTranslation();
+
+    const validationSchema = useMemo(
+        () =>
+            Yup.object({
+                email: Yup.string()
+                    .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, t('auth.emailNotValid'))
+                    .required(t('auth.fillAllFields')),
+                password: Yup.string()
+                    .min(8, t('auth.passwordMin'))
+                    .required(t('auth.fillAllFields')),
+            }),
+        [t],
+    );
 
     const formik = useFormik({
         initialValues: {
@@ -75,16 +81,16 @@ const SignUpPage = () => {
 
     return (
         <AuthLayout
-            title="Create an account"
-            subtitle="Enter your email and password to sign up for this app"
-            bottomText="Already have an account?"
-            bottomLink={{ text: 'Sign in', href: '/signin' }}
+            title={t('auth.signUpTitle')}
+            subtitle={t('auth.signUpSubtitle')}
+            bottomText={t('auth.alreadyHaveAccount')}
+            bottomLink={{ text: t('nav.signIn'), href: '/signin' }}
         >
             <form className="auth-form" onSubmit={formik.handleSubmit} noValidate>
                 <Input
                     type={InputType.EMAIL}
-                    label="Email"
-                    placeholder="Enter email"
+                    label={t('auth.email')}
+                    placeholder={t('auth.emailPlaceholder')}
                     value={formik.values.email}
                     onChange={(value) => formik.setFieldValue('email', value)}
                     onBlur={() => formik.setFieldTouched('email', true)}
@@ -100,8 +106,8 @@ const SignUpPage = () => {
 
                 <Input
                     type={InputType.PASSWORD}
-                    label="Password"
-                    placeholder="Enter password"
+                    label={t('auth.password')}
+                    placeholder={t('auth.passwordPlaceholder')}
                     value={formik.values.password}
                     onChange={(value) => formik.setFieldValue('password', value)}
                     onBlur={() => formik.setFieldTouched('password', true)}
@@ -110,7 +116,7 @@ const SignUpPage = () => {
                         !!formik.touched.password,
                         formik.errors.password,
                     )}
-                    successMessage="Your password is strong"
+                    successMessage={t('auth.passwordStrong')}
                     errorMessage={formik.errors.password}
                     icon={<PasswordIcon />}
                     disabled={formik.isSubmitting}
@@ -119,20 +125,20 @@ const SignUpPage = () => {
 
                 <div className="auth-form-button-container">
                     <Button
-                        label={formik.isSubmitting ? 'Signing Up...' : 'Sign Up'}
+                        label={formik.isSubmitting ? t('auth.signingUp') : t('auth.signUp')}
                         disabled={formik.isSubmitting || !formik.isValid || !formik.dirty}
                         type={ButtonType.SUBMIT}
                     />
                 </div>
 
                 <p className="auth-terms">
-                    By clicking continue, you agree to our{' '}
+                    {t('auth.terms')}{' '}
                     <a href="/terms" className="auth-terms-link">
-                        Terms of Service
+                        {t('auth.termsLink')}
                     </a>{' '}
-                    and{' '}
+                    {t('auth.and')}{' '}
                     <a href="/privacy" className="auth-terms-link">
-                        Privacy Policy
+                        {t('auth.privacyLink')}
                     </a>
                 </p>
             </form>

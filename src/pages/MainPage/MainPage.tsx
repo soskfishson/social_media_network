@@ -41,7 +41,7 @@ const MainPage = () => {
     return (
         <>
             <Header />
-            <div className="main-page">
+            <div className="main-page page-transition-wrapper">
                 <div className="main-page-content">
                     <main className="main-page-container">
                         {isLoggedIn && <CreatePostForm />}
@@ -59,7 +59,9 @@ const MainPage = () => {
 
                             {!isLoading &&
                                 visiblePosts.map((post: PostType) => (
-                                    <Post post={post} key={post.id} />
+                                    <div className="post-list-item" key={post.id}>
+                                        <Post post={post} />
+                                    </div>
                                 ))}
 
                             {!isLoading && posts.length === 0 && !error && (

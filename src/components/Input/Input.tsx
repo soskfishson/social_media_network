@@ -1,10 +1,11 @@
-import { type ChangeEvent, useState } from 'react';
+import { type ChangeEvent, useState, useId } from 'react';
 import {
     ButtonType,
     type InputProps,
     InputType,
     ValidationState,
 } from '../../interfaces/interfaces';
+import { useTranslation } from 'react-i18next';
 import InfoIcon from '../../assets/InfoIcon.svg?react';
 import InfoIconError from '../../assets/InfoIconError.svg?react';
 import ShowPassword from '../../assets/ShowPassword.svg?react';
@@ -34,6 +35,7 @@ const Input = ({
 }: InputProps) => {
     const [showPassword, setShowPassword] = useState(false);
     const [fileName, setFileName] = useState<string>('');
+    const { t } = useTranslation();
     const charCount = value.length;
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -48,32 +50,24 @@ const Input = ({
         }
     };
 
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
-    };
+    const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
     const getInputType = () => {
         if (type === InputType.PASSWORD && showPasswordToggle) {
-            if (showPassword) {
-                return 'text';
-            }
-            return 'password';
+            return showPassword ? 'text' : 'password';
         }
-        if (type === InputType.TEXTAREA || type === InputType.FILE) {
-            return undefined;
-        }
+        if (type === InputType.TEXTAREA || type === InputType.FILE) return undefined;
         return type;
     };
 
     const getStateStyle = () => {
-        if (validationState === ValidationState.VALID) {
-            return 'input-valid';
-        }
-        if (validationState === ValidationState.INVALID) {
-            return 'input-invalid';
-        }
+        if (validationState === ValidationState.VALID) return 'input-valid';
+        if (validationState === ValidationState.INVALID) return 'input-invalid';
         return '';
     };
+
+    const defaultId = useId();
+    const inputId = `input-${defaultId}`;
 
     const isOverLimit = type === InputType.TEXTAREA && maxLength && charCount > maxLength;
 
@@ -81,14 +75,14 @@ const Input = ({
         return (
             <div className="input-wrapper">
                 {label && (
-                    <label className="input-label">
+                    <label className="input-label" htmlFor={inputId}>
                         {icon && <span className="input-label-icon">{icon}</span>}
                         {label}
                     </label>
                 )}
 
                 <label
-                    htmlFor={`file-input-${label}`}
+                    htmlFor={inputId}
                     className={`file-upload-area ${disabled ? 'file-upload-disabled' : ''}`}
                     style={{ backgroundColor }}
                 >
@@ -105,19 +99,23 @@ const Input = ({
                         <FileIcon className="file-upload-icon" />
                         <div className="file-upload-text-area">
                             <span className="file-upload-text">
-                                {fileName || placeholder || 'Select a file or drag and drop here'}
+                                {fileName || placeholder || t('posts.selectFile')}
                             </span>
                             <span className="file-upload-hint">
                                 {accept
-                                    ? `${accept.replace(/\./g, '').toUpperCase()}, file size no more than 10MB`
-                                    : 'File size no more than 10MB'}
+                                    ? `${accept.replace(/\./g, '').toUpperCase()}, ${t('posts.fileSizeLimit')}`
+                                    : t('posts.fileSizeLimit')}
                             </span>
                         </div>
                     </div>
                 </label>
 
                 {validationState === ValidationState.INVALID && errorMessage && (
-                    <div className="input-message input-message-error" data-testid="input-error">
+                    <div
+                        className="input-message input-message-error"
+                        data-testid="input-error"
+                        role="alert"
+                    >
                         <span className="input-message-icon">
                             <InfoIconError />
                         </span>
@@ -133,7 +131,7 @@ const Input = ({
 
     return (
         <div className="input-wrapper">
-            <label className="input-label">
+            <label className="input-label" htmlFor={inputId}>
                 <span className="input-label-container">
                     <span className="input-label-icon">{icon}</span>
                     {label}
@@ -154,6 +152,7 @@ const Input = ({
                         disabled={disabled}
                         maxLength={maxLength}
                         style={{ backgroundColor }}
+                        aria-invalid={validationState === ValidationState.INVALID}
                     />
                 ) : (
                     <input
@@ -166,6 +165,7 @@ const Input = ({
                         onBlur={onBlur}
                         disabled={disabled}
                         style={{ backgroundColor }}
+                        aria-invalid={validationState === ValidationState.INVALID}
                     />
                 )}
 
@@ -175,6 +175,8 @@ const Input = ({
                             type={ButtonType.BUTTON}
                             className="input-password-toggle"
                             onClick={togglePasswordVisibility}
+                            aria-label={showPassword ? 'Hide password' : 'Show password'}
+                            aria-pressed={showPassword}
                         >
                             {showPassword ? <HidePassword /> : <ShowPassword />}
                         </Button>
@@ -183,7 +185,11 @@ const Input = ({
             </div>
 
             {validationState === ValidationState.VALID && successMessage && (
-                <div className="input-message input-message-success" data-testid="input-success">
+                <div
+                    className="input-message input-message-success"
+                    data-testid="input-success"
+                    role="status"
+                >
                     <span className="input-message-icon">
                         <SuccessIcon />
                     </span>
@@ -192,7 +198,11 @@ const Input = ({
             )}
 
             {validationState === ValidationState.INVALID && errorMessage && (
-                <div className="input-message input-message-error" data-testid="input-error">
+                <div
+                    className="input-message input-message-error"
+                    data-testid="input-error"
+                    role="alert"
+                >
                     <span className="input-message-icon">
                         <InfoIconError />
                     </span>
@@ -208,7 +218,7 @@ const Input = ({
                     <span className="input-char-count-icon">
                         <InfoIcon />
                     </span>
-                    Max {maxLength} texts
+                    {t('profile.maxTexts', { count: maxLength })}
                 </div>
             )}
         </div>

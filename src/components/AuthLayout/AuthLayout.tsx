@@ -17,7 +17,7 @@ interface AuthLayoutProps {
 
 const AuthLayout = ({ title, subtitle, children, bottomText, bottomLink }: AuthLayoutProps) => {
     return (
-        <div className="auth-layout">
+        <div className="auth-layout page-transition-wrapper">
             <Header variant="simple" />
             <main className="auth-main">
                 <div className="auth-container">

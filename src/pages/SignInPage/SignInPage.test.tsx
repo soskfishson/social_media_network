@@ -87,7 +87,7 @@ describe('SignInPage — submission', () => {
 
         await waitFor(() => {
             expect(mockAddToast).toHaveBeenCalledWith(
-                expect.stringContaining('Failed to sign into account'),
+                expect.stringContaining('Failed to sign in'),
                 ToastType.ERROR,
             );
         });

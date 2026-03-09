@@ -1,12 +1,17 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+import { I18nextProvider } from 'react-i18next';
 import Input from './Input';
 import { InputType, ValidationState } from '../../interfaces/interfaces';
+import { testI18n } from '../../tests/test-utils';
 
 const noop = () => {};
 
+const renderInput = (ui: React.ReactElement) =>
+    render(<I18nextProvider i18n={testI18n}>{ui}</I18nextProvider>);
+
 describe('Input — text type', () => {
     it('renders the label text', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.TEXT}
                 label="Username"
@@ -19,7 +24,7 @@ describe('Input — text type', () => {
     });
 
     it('renders placeholder text', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.TEXT}
                 label=""
@@ -33,7 +38,7 @@ describe('Input — text type', () => {
 
     it('calls onChange with new value on input change', () => {
         const mockOnChange = jest.fn();
-        render(
+        renderInput(
             <Input
                 type={InputType.TEXT}
                 label=""
@@ -48,7 +53,7 @@ describe('Input — text type', () => {
 
     it('calls onBlur callback when field loses focus', () => {
         const mockOnBlur = jest.fn();
-        render(
+        renderInput(
             <Input
                 type={InputType.TEXT}
                 label=""
@@ -63,7 +68,7 @@ describe('Input — text type', () => {
     });
 
     it('is disabled when disabled prop is true', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.TEXT}
                 label=""
@@ -79,7 +84,7 @@ describe('Input — text type', () => {
 
 describe('Input — validation states', () => {
     it('applies input-invalid class when state is INVALID', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.TEXT}
                 label=""
@@ -94,7 +99,7 @@ describe('Input — validation states', () => {
     });
 
     it('shows error message when state is INVALID', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.TEXT}
                 label=""
@@ -109,7 +114,7 @@ describe('Input — validation states', () => {
     });
 
     it('applies input-valid class when state is VALID', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.TEXT}
                 label=""
@@ -123,7 +128,7 @@ describe('Input — validation states', () => {
     });
 
     it('shows success message when state is VALID', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.TEXT}
                 label=""
@@ -138,7 +143,7 @@ describe('Input — validation states', () => {
     });
 
     it('shows check icon when state is VALID', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.TEXT}
                 label=""
@@ -152,7 +157,7 @@ describe('Input — validation states', () => {
     });
 
     it('does not render error or success when state is IDLE', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.TEXT}
                 label=""
@@ -171,7 +176,7 @@ describe('Input — validation states', () => {
 
 describe('Input — password type', () => {
     it('renders as password type by default', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.PASSWORD}
                 label=""
@@ -184,7 +189,7 @@ describe('Input — password type', () => {
     });
 
     it('toggles to text type when show-password button is clicked', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.PASSWORD}
                 label=""
@@ -199,7 +204,7 @@ describe('Input — password type', () => {
     });
 
     it('toggles back to password on second click', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.PASSWORD}
                 label=""
@@ -216,7 +221,7 @@ describe('Input — password type', () => {
     });
 
     it('does not show toggle button when showPasswordToggle is false', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.PASSWORD}
                 label=""
@@ -232,7 +237,7 @@ describe('Input — password type', () => {
 
 describe('Input — textarea type', () => {
     it('renders a textarea element', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.TEXTAREA}
                 label=""
@@ -245,7 +250,7 @@ describe('Input — textarea type', () => {
     });
 
     it('shows character count info when maxLength is set', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.TEXTAREA}
                 label=""
@@ -260,7 +265,7 @@ describe('Input — textarea type', () => {
 
     it('applies error class on char count when over limit', () => {
         const longText = 'a'.repeat(15);
-        render(
+        renderInput(
             <Input
                 type={InputType.TEXTAREA}
                 label=""
@@ -275,7 +280,7 @@ describe('Input — textarea type', () => {
     });
 
     it('does not apply error class when within limit', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.TEXTAREA}
                 label=""
@@ -292,7 +297,7 @@ describe('Input — textarea type', () => {
 
 describe('Input — file type', () => {
     it('renders file upload area', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.FILE}
                 label="Upload"
@@ -306,7 +311,7 @@ describe('Input — file type', () => {
 
     it('calls onFileChange with selected file', () => {
         const mockOnFileChange = jest.fn();
-        render(
+        renderInput(
             <Input
                 type={InputType.FILE}
                 label="Upload"
@@ -322,7 +327,7 @@ describe('Input — file type', () => {
     });
 
     it('displays the filename after file selection', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.FILE}
                 label="Upload"
@@ -338,7 +343,7 @@ describe('Input — file type', () => {
     });
 
     it('shows error message when INVALID and errorMessage provided', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.FILE}
                 label="Upload"
@@ -353,7 +358,7 @@ describe('Input — file type', () => {
     });
 
     it('is disabled when disabled prop is true', () => {
-        render(
+        renderInput(
             <Input
                 type={InputType.FILE}
                 label="Upload"

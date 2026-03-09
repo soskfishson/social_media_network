@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -10,22 +11,28 @@ import PasswordIcon from '../../assets/Eye.svg?react';
 import useToast from '../../hooks/useToast';
 import useAuth from '../../hooks/useAuth';
 import { ButtonType, InputType, ToastType, ValidationState } from '../../interfaces/interfaces';
+import { useTranslation } from 'react-i18next';
 import './SignInPage.css';
-
-const signInSchema = z.object({
-    email: z
-        .string()
-        .min(1, { message: 'Please fill in all fields' })
-        .email({ message: 'Email is not valid' }),
-    password: z.string().min(1, { message: 'Please fill in all fields' }),
-});
-
-type SignInFormValues = z.infer<typeof signInSchema>;
 
 const SignInPage = () => {
     const { addToast } = useToast();
     const { login } = useAuth();
     const navigate = useNavigate();
+    const { t } = useTranslation();
+
+    const signInSchema = useMemo(
+        () =>
+            z.object({
+                email: z
+                    .string()
+                    .min(1, { message: t('auth.fillAllFields') })
+                    .email({ message: t('auth.emailNotValid') }),
+                password: z.string().min(1, { message: t('auth.fillAllFields') }),
+            }),
+        [t],
+    );
+
+    type SignInFormValues = z.infer<typeof signInSchema>;
 
     const {
         control,
@@ -61,27 +68,27 @@ const SignInPage = () => {
     const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
         try {
             await login({ email: data.email, password: data.password });
-            addToast('Successfully signed in!', ToastType.SUCCESS);
+            addToast(t('toast.successSignedIn'), ToastType.SUCCESS);
             navigate('/');
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : '';
             addToast(
-                `Failed to sign into account${errorMessage ? `. ${errorMessage}` : ''}. Please try again.`,
+                `${t('toast.failedSignIn')}${errorMessage ? ` ${errorMessage}` : ''} ${t('auth.tryAgain')}`,
                 ToastType.ERROR,
             );
         }
     };
 
     const onInvalid = () => {
-        addToast('Please check your input fields', ToastType.ERROR);
+        addToast(t('auth.checkFields'), ToastType.ERROR);
     };
 
     return (
         <AuthLayout
-            title="Sign in into an account"
-            subtitle={'Enter your email and password \n' + 'to sign in into this app'}
-            bottomText="Forgot to create an account? "
-            bottomLink={{ text: 'Sign up', href: '/signup' }}
+            title={t('auth.signInTitle')}
+            subtitle={t('auth.signInSubtitle')}
+            bottomText={t('auth.forgotToCreate')}
+            bottomLink={{ text: t('nav.signUp'), href: '/signup' }}
         >
             <form className="auth-form" onSubmit={handleSubmit(onSubmit, onInvalid)}>
                 <Controller
@@ -90,8 +97,8 @@ const SignInPage = () => {
                     render={({ field, fieldState }) => (
                         <Input
                             type={InputType.EMAIL}
-                            label="Email"
-                            placeholder="Enter email"
+                            label={t('auth.email')}
+                            placeholder={t('auth.emailPlaceholder')}
                             value={field.value}
                             onChange={field.onChange}
                             validationState={getValidationState(
@@ -99,7 +106,7 @@ const SignInPage = () => {
                                 fieldState.isTouched,
                                 field.value,
                             )}
-                            errorMessage={fieldState.error?.message || 'Email is not valid'}
+                            errorMessage={fieldState.error?.message || t('auth.emailNotValid')}
                             icon={<EmailIcon />}
                             disabled={isSubmitting}
                         />
@@ -112,8 +119,8 @@ const SignInPage = () => {
                     render={({ field, fieldState }) => (
                         <Input
                             type={InputType.PASSWORD}
-                            label="Password"
-                            placeholder="Enter password"
+                            label={t('auth.password')}
+                            placeholder={t('auth.passwordPlaceholder')}
                             value={field.value}
                             onChange={field.onChange}
                             validationState={getValidationState(
@@ -121,8 +128,8 @@ const SignInPage = () => {
                                 fieldState.isTouched,
                                 field.value,
                             )}
-                            successMessage="Your password is correct"
-                            errorMessage={fieldState.error?.message || 'Incorrect password'}
+                            successMessage={t('auth.passwordCorrect')}
+                            errorMessage={fieldState.error?.message || t('auth.tryAgain')}
                             icon={<PasswordIcon />}
                             disabled={isSubmitting}
                             showPasswordToggle={true}
@@ -132,7 +139,7 @@ const SignInPage = () => {
 
                 <div className="auth-form-button-container">
                     <Button
-                        label={isSubmitting ? 'Signing In...' : 'Sign In'}
+                        label={isSubmitting ? t('auth.signingIn') : t('auth.signIn')}
                         disabled={isSubmitting}
                         type={ButtonType.SUBMIT}
                     />

@@ -38,9 +38,10 @@ describe('Post — rendering', () => {
         expect(screen.queryByRole('img', { name: /post/i })).not.toBeInTheDocument();
     });
 
-    it('shows like count from likedByUsers array', () => {
-        const post = {
+    it('shows like count from post likesCount field', () => {
+        const post: PostType = {
             ...basePost,
+            likesCount: 2,
             likedByUsers: [
                 { id: 1, username: 'user1' },
                 { id: 2, username: 'user2' },

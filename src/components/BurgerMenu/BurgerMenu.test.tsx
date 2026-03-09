@@ -90,6 +90,6 @@ describe('BurgerMenu — authenticated links', () => {
         renderWithProviders(<BurgerMenu />, {
             authValue: { isLoggedIn: true, user: mockAuthUser },
         });
-        expect(screen.getByAltText(mockAuthUser.username)).toBeInTheDocument();
+        expect(screen.getByAltText(/testuser's profile picture/i)).toBeInTheDocument();
     });
 });
