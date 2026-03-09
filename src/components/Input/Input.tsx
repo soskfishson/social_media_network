@@ -120,11 +120,7 @@ const Input = ({
                             <InfoIconError />
                         </span>
                         {errorMessage}
-                        <Button
-                            type={ButtonType.BUTTON}
-                            className="input-message-info"
-                            tabIndex={-1}
-                        >
+                        <Button type={ButtonType.BUTTON} className="input-message-info">
                             <InfoIcon />
                         </Button>
                     </div>
@@ -211,7 +207,7 @@ const Input = ({
                         <InfoIconError />
                     </span>
                     {errorMessage}
-                    <Button type={ButtonType.BUTTON} className="input-message-info" tabIndex={-1}>
+                    <Button type={ButtonType.BUTTON} className="input-message-info">
                         <InfoIcon />
                     </Button>
                 </div>

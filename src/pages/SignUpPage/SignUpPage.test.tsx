@@ -139,7 +139,7 @@ describe('SignUpPage — layout', () => {
 
     it('renders link to sign in page', () => {
         renderWithProviders(<SignUpPage />);
-        expect(screen.getByText('Sign in')).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'Sign In' })).toHaveAttribute('href', '/signin');
     });
 
     it('renders terms of service and privacy policy links', () => {

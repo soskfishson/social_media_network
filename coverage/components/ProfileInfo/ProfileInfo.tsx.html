@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">70.58% </span>
+                <span class="strong">71.59% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>60/85</span>
+                <span class='fraction'>63/88</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76.92% </span>
+                <span class="strong">78.57% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>10/13</span>
+                <span class='fraction'>11/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">70.58% </span>
+                <span class="strong">71.59% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>60/85</span>
+                <span class='fraction'>63/88</span>
             </div>
         
             
@@ -359,7 +359,23 @@
 <a name='L294'></a><a href='#L294'>294</a>
 <a name='L295'></a><a href='#L295'>295</a>
 <a name='L296'></a><a href='#L296'>296</a>
-<a name='L297'></a><a href='#L297'>297</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L297'></a><a href='#L297'>297</a>
+<a name='L298'></a><a href='#L298'>298</a>
+<a name='L299'></a><a href='#L299'>299</a>
+<a name='L300'></a><a href='#L300'>300</a>
+<a name='L301'></a><a href='#L301'>301</a>
+<a name='L302'></a><a href='#L302'>302</a>
+<a name='L303'></a><a href='#L303'>303</a>
+<a name='L304'></a><a href='#L304'>304</a>
+<a name='L305'></a><a href='#L305'>305</a>
+<a name='L306'></a><a href='#L306'>306</a>
+<a name='L307'></a><a href='#L307'>307</a>
+<a name='L308'></a><a href='#L308'>308</a>
+<a name='L309'></a><a href='#L309'>309</a>
+<a name='L310'></a><a href='#L310'>310</a>
+<a name='L311'></a><a href='#L311'>311</a>
+<a name='L312'></a><a href='#L312'>312</a>
+<a name='L313'></a><a href='#L313'>313</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -379,12 +395,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -458,6 +469,17 @@
 <span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -654,8 +676,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { type SyntheticEvent, useReducer } from 'react';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { type SyntheticEvent, useReducer, useMemo } from 'react';
 import { useAppDispatch } from '../../redux/hooks';
 import { updateProfileThunk } from '../../redux/AuthSlice';
 import { z } from 'zod';
@@ -671,16 +703,11 @@ import {
 } from '../../interfaces/interfaces';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
+import { useTranslation } from 'react-i18next';
 import UserIcon from '../../assets/User.svg?react';
 import EmailIcon from '../../assets/Email.svg?react';
 import PencilIcon from '../../assets/PencilIcon.svg?react';
 import './ProfileInfo.css';
-&nbsp;
-const profileSchema = z.object({
-    username: z.string().min(3, 'Username must be at least 3 characters'),
-    email: z.string().email('Invalid email format'),
-    description: z.string().max(200, 'Bio cannot exceed 200 characters').optional(),
-});
 &nbsp;
 interface ProfileFormState {
     username: string;
@@ -754,6 +781,17 @@ const ProfileInfo = () =&gt; {
     const { user, logout } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const { addToast } = useToast();
+    const { t } = useTranslation();
+&nbsp;
+    const profileSchema = useMemo(
+        () =&gt;
+            z.object({
+                username: z.string().min(3, t('profile.usernameMin')),
+                email: z.string().email(t('profile.emailInvalid')),
+                description: z.string().max(200, t('profile.bioMax')).optional(),
+            }),
+        [t],
+    );
 &nbsp;
     const initialState: ProfileFormState = {
         username: user?.username || <span class="branch-1 cbranch-no" title="branch not covered" >'',</span>
@@ -806,7 +844,7 @@ const ProfileInfo = () =&gt; {
             });
 &nbsp;
             dispatch({ type: FormActionType.SET_ERRORS, payload: fieldErrors });
-            addToast('Please correct the highlighted errors', ToastType.ERROR);
+            addToast(t('profile.correctErrors'), ToastType.ERROR);
             return;
         }
 &nbsp;
@@ -823,9 +861,9 @@ const ProfileInfo = () =&gt; {
             ).unwrap();
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            dispatch({ type: FormActionType.SUBMIT_SUCCESS });</span>
-<span class="cstat-no" title="statement not covered" >            addToast('Profile updated successfully!', ToastType.SUCCESS);</span>
+<span class="cstat-no" title="statement not covered" >            addToast(t('profile.profileUpdated'), ToastType.SUCCESS);</span>
         } catch (error) {
-<span class="cstat-no" title="statement not covered" >            addToast((error as string) || 'Failed to update profile', ToastType.ERROR);</span>
+<span class="cstat-no" title="statement not covered" >            addToast((error as string) || t('profile.failedUpdate'), ToastType.ERROR);</span>
 <span class="cstat-no" title="statement not covered" >            dispatch({ type: FormActionType.SUBMIT_SUCCESS });</span>
         }
     };
@@ -839,7 +877,7 @@ const ProfileInfo = () =&gt; {
     return (
         &lt;div className="profile-info-container"&gt;
             &lt;div className="profile-edit-section"&gt;
-                &lt;h2 className="section-title"&gt;Edit profile&lt;/h2&gt;
+                &lt;h2 className="section-title"&gt;{t('profile.editProfile')}&lt;/h2&gt;
 &nbsp;
                 &lt;div className="profile-photo-section"&gt;
                     &lt;img src={photoPreview} alt="avatar" className="profile-photo" /&gt;
@@ -850,7 +888,7 @@ const ProfileInfo = () =&gt; {
                             onClick={handlePhotoClick}
                             className="change-photo-btn"
                         &gt;
-                            Change profile photo
+                            {t('profile.changePhoto')}
                         &lt;/Button&gt;
                     &lt;/div&gt;
                 &lt;/div&gt;
@@ -858,8 +896,8 @@ const ProfileInfo = () =&gt; {
                 &lt;form onSubmit={handleSubmit} className="profile-form"&gt;
                     &lt;Input
                         type={InputType.TEXT}
-                        label="Username"
-                        placeholder="@username123"
+                        label={t('profile.username')}
+                        placeholder={t('profile.usernamePlaceholder')}
                         value={formState.username}
                         onChange={(val) =&gt;
                             dispatch({
@@ -876,8 +914,8 @@ const ProfileInfo = () =&gt; {
 &nbsp;
                     &lt;Input
                         type={InputType.EMAIL}
-                        label="Email"
-                        placeholder="email@example.com"
+                        label={t('auth.email')}
+                        placeholder={t('auth.emailPlaceholder')}
                         value={formState.email}
                         onChange={(val) =&gt;
                             dispatch({
@@ -895,8 +933,8 @@ const ProfileInfo = () =&gt; {
                     &lt;div className="textarea-wrapper"&gt;
                         &lt;Input
                             type={InputType.TEXTAREA}
-                            label="Description"
-                            placeholder="Write your bio..."
+                            label={t('posts.description')}
+                            placeholder={t('posts.descriptionPlaceholder')}
                             value={formState.description}
                             onChange={<span class="fstat-no" title="function not covered" >(v</span>al) =&gt;
 <span class="cstat-no" title="statement not covered" >                                dispatch({</span>
@@ -915,7 +953,11 @@ const ProfileInfo = () =&gt; {
 &nbsp;
                     &lt;div className="save-button-container"&gt;
                         &lt;Button
-                            label={formState.isSubmitting ? <span class="branch-0 cbranch-no" title="branch not covered" >'Saving...' </span>: 'Save Profile Changes'}
+                            label={
+                                formState.isSubmitting
+                                    ? <span class="branch-0 cbranch-no" title="branch not covered" >t('profile.saving')</span>
+                                    : t('profile.saveChanges')
+                            }
                             disabled={formState.isSubmitting}
                             type={ButtonType.SUBMIT}
                         /&gt;
@@ -924,7 +966,7 @@ const ProfileInfo = () =&gt; {
             &lt;/div&gt;
 &nbsp;
             &lt;div className="profile-preferences-section"&gt;
-                &lt;h2 className="section-title"&gt;Preferences&lt;/h2&gt;
+                &lt;h2 className="section-title"&gt;{t('profile.preferences')}&lt;/h2&gt;
                 &lt;div className="preference-item"&gt;
                     &lt;label className="theme-toggle-container"&gt;
                         &lt;input
@@ -933,17 +975,23 @@ const ProfileInfo = () =&gt; {
                             onChange={toggleTheme}
                             className="theme-toggle-checkbox"
                             data-testid="theme-checkbox"
+                            role="switch"
+                            aria-checked={isDarkTheme}
                         /&gt;
                         &lt;span className={`theme-toggle-switch ${isDarkTheme ? 'active' : ''}`}&gt;
                             &lt;span className="theme-toggle-slider"&gt;&lt;/span&gt;
                         &lt;/span&gt;
-                        &lt;span className="theme-toggle-label"&gt;Dark theme&lt;/span&gt;
+                        &lt;span className="theme-toggle-label"&gt;{t('profile.darkTheme')}&lt;/span&gt;
                     &lt;/label&gt;
                 &lt;/div&gt;
 &nbsp;
-                &lt;h2 className="section-title actions-title"&gt;Actions&lt;/h2&gt;
+                &lt;h2 className="section-title actions-title"&gt;{t('profile.actions')}&lt;/h2&gt;
                 &lt;div className="logout-button-container"&gt;
-                    &lt;Button label="Logout" onClick={logout} data-testid="logout-button" /&gt;
+                    &lt;Button
+                        label={t('profile.logout')}
+                        onClick={logout}
+                        data-testid="logout-button"
+                    /&gt;
                 &lt;/div&gt;
             &lt;/div&gt;
         &lt;/div&gt;
@@ -958,7 +1006,7 @@ export default ProfileInfo;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-02-27T10:13:50.137Z
+                at 2026-03-09T10:32:16.258Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

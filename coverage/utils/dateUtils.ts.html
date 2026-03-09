@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>19/19</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.75% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>15/16</span>
+                <span class='fraction'>14/16</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>18/18</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
@@ -97,67 +97,73 @@
 <a name='L32'></a><a href='#L32'>32</a>
 <a name='L33'></a><a href='#L33'>33</a>
 <a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">43x</span>
-<span class="cline-any cline-yes">43x</span>
-<span class="cline-any cline-yes">43x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">43x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">42x</span>
-<span class="cline-any cline-yes">24x</span>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const timeAgo = (date: string | Date | number): string =&gt; {
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const timeAgo = (
+    date: string | Date | number,
+    t: (key: string, params?: Record&lt;string, string | number&gt;) =&gt; string,
+    locale: string,
+): string =&gt; {
     const now = new Date();
     const past = new Date(date);
     const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
 &nbsp;
-    if (diffInSeconds &lt; 0) return 'Just now';
-&nbsp;
-    if (diffInSeconds &lt; 60) {
-        return 'Just now';
-    }
+    if (diffInSeconds &lt; 60) return t('time.justNow');
 &nbsp;
     const diffInMinutes = Math.floor(diffInSeconds / 60);
     if (diffInMinutes &lt; 60) {
-        return `${diffInMinutes} min ago`;
+        return t('time.minAgo', { count: diffInMinutes });
     }
 &nbsp;
     const diffInHours = Math.floor(diffInMinutes / 60);
     if (diffInHours &lt; 24) {
-        return `${diffInHours} ${diffInHours === 1 ? 'hour' : 'hours'} ago`;
+        return diffInHours === 1 ? t('time.hourAgo') : t('time.hoursAgo', { count: diffInHours });
     }
 &nbsp;
     const diffInDays = Math.floor(diffInHours / 24);
     if (diffInDays &lt; 7) {
-        return `${diffInDays} ${diffInDays === 1 ? 'day' : 'days'} ago`;
+        return diffInDays === 1 ? t('time.dayAgo') : t('time.daysAgo', { count: diffInDays });
     }
 &nbsp;
-    return new Intl.DateTimeFormat('en-US', {
+    const intlLocale = locale === 'en' ? 'en-US' : <span class="branch-1 cbranch-no" title="branch not covered" >locale;</span>
+&nbsp;
+    return new Intl.DateTimeFormat(intlLocale, {
         month: 'short',
         day: 'numeric',
         year: now.getFullYear() !== past.getFullYear() ? <span class="branch-0 cbranch-no" title="branch not covered" >'numeric' </span>: undefined,
@@ -172,7 +178,7 @@ export default timeAgo;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-02-27T10:13:50.137Z
+                at 2026-03-09T10:32:16.258Z
             </div>
         <script src="../prettify.js"></script>
         <script>
